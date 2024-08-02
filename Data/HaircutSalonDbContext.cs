@@ -1,9 +1,12 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
+
 namespace AppointmentAPI.Data
 {
-    public class EmptyClass
+    public class HaircutSalonDbContext : DbContext
     {
-        public EmptyClass()
+        
+        public HaircutSalonDbContext(DbContextOptions<HaircutSalonDbContext> options) : base(options)
         {
         }
     }
