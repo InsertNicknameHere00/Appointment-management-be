@@ -8,7 +8,8 @@
         [Required]
         public int userID { get; set; }
 
-        [Required]
+        //[Required]   i removed it for now because it wants in the login username and still wants it but now it is emty.
+        //Will have to be looked for future changes.
         public string username { get; set; }
 
         [Required]
