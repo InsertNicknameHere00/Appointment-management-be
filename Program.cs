@@ -1,6 +1,8 @@
 using AppointmentAPI.Data;
+using AppointmentAPI.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 
@@ -15,6 +17,8 @@ builder.Services.AddControllers();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HaircutSalonDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddIdentity<Users, IdentityRole>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
