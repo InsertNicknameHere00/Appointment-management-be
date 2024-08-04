@@ -27,27 +27,27 @@ namespace AppointmentAPI.Controllers
             return Ok(userTemp);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserID(int userId) {
+        [HttpGet("userId")]
+        public async Task<IActionResult> GetUserID([FromHeader] int userId) {
             var userTemp = await _usersService.GetUsersIDQuery(userId);
             return Ok(userTemp);
         }
 
-        [HttpPost("{id}")]
-        public async Task<IActionResult> PostUsersID(string username, string email, string password, int roleId) {
-            var userTemp = await _usersService.PostUsersIDQuery(username,email,password, roleId);
+        [HttpPost("userId")]
+        public async Task<IActionResult> PostUsersID([FromBody] Users users) {
+            var userTemp = await _usersService.PostUsersIDQuery(users);
             return Ok(userTemp);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RegisterUser(string username, string email, string password) {
-            var userTemp = await _usersService.RegistrationQuery(username, email, password);
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterUser([FromBody] Users users) {
+            var userTemp = await _usersService.RegistrationQuery(users);
             return Ok(userTemp);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserID(int userID) {
-            var userTemp = await _usersService.DeleteUsersQuery(userID);
+        [HttpDelete("id")]
+        public async Task<IActionResult> DeleteUserID([FromHeader] int id) {
+            var userTemp = await _usersService.DeleteUsersQuery(id);
             return Ok(userTemp);
         }
     }

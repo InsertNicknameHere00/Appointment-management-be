@@ -6,7 +6,6 @@
     public class Users
     {
         [Key]
-        [Required]
         public int? userID { get; set; }
 
         [Required]
