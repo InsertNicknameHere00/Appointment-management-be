@@ -18,9 +18,6 @@ builder.Services.AddControllers();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HaircutSalonDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<Users, IdentityRole>();
-
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

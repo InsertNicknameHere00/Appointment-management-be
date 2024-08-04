@@ -49,9 +49,15 @@ namespace AppointmentAPI.Controllers
             return Ok(userTemp);
         }
 
-        [HttpPost]
+        [HttpPost("{register}")]
         public async Task<IActionResult> RegisterUser(Users user) {
         var userTemp= await _usersService.RegistrationQuery(user);
+            return Ok(userTemp);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUserID(int userID) {
+            var userTemp = await _usersService.DeleteUsersQuery(userID);
             return Ok(userTemp);
         }
     }
