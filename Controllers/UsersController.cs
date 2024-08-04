@@ -4,11 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using AppointmentAPI.Services;
 
 namespace AppointmentAPI.Controllers
@@ -37,25 +33,19 @@ namespace AppointmentAPI.Controllers
             return Ok(userTemp);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> PostUsers(Users user) {
-            var userTemp = await _usersService.PostUsersQuery(user);
-            return Ok(userTemp);
-        }
-
         [HttpPost("{id}")]
-        public async Task<IActionResult> PostUsersID(int userId,Users user) {
-            var userTemp = await _usersService.PostUsersIDQuery(userId,user);
+        public async Task<IActionResult> PostUsersID(string username, string email, string password, int roleId) {
+            var userTemp = await _usersService.PostUsersIDQuery(username,email,password, roleId);
             return Ok(userTemp);
         }
 
-        [HttpPost("{register}")]
-        public async Task<IActionResult> RegisterUser(Users user) {
-        var userTemp= await _usersService.RegistrationQuery(user);
+        [HttpPost]
+        public async Task<IActionResult> RegisterUser(string username, string email, string password) {
+            var userTemp = await _usersService.RegistrationQuery(username, email, password);
             return Ok(userTemp);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserID(int userID) {
             var userTemp = await _usersService.DeleteUsersQuery(userID);
             return Ok(userTemp);

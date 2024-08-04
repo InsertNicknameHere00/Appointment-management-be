@@ -3,7 +3,7 @@
     using Microsoft.AspNetCore.Identity;
     using System.ComponentModel.DataAnnotations;
 
-    public class Users : IdentityUser
+    public class Users
     {
         [Key]
         [Required]
