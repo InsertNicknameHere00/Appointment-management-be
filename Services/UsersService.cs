@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace AppointmentAPI.Services
 {
@@ -26,7 +27,23 @@ namespace AppointmentAPI.Services
             return users;
         }
 
-        public async Task<Users> PostUsersIDQuery(Users users)
+        public async Task<Users> UpdateUsersIDQuery(int id,Users users) {
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser != null)
+            {
+                existingUser.UserID = id;
+                existingUser.UserName = users.UserName;
+                existingUser.Email = users.Email;
+                existingUser.PasswordHash = users.PasswordHash;
+                existingUser.RoleID = users.RoleID;
+
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
+            return await _context.Users.FindAsync(id); ;
+        }
+
+        public async Task<Users> AddUsersIDQuery(Users users)
         {
             Users newUser = new Users();
             newUser.UserName = users.UserName;

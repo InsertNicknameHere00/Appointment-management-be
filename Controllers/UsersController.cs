@@ -35,7 +35,7 @@ namespace AppointmentAPI.Controllers
 
         [HttpPost("userId")]
         public async Task<IActionResult> PostUsersID([FromBody] Users users) {
-            var userTemp = await _usersService.PostUsersIDQuery(users);
+            var userTemp = await _usersService.AddUsersIDQuery(users);
             return Ok(userTemp);
         }
 
@@ -48,6 +48,13 @@ namespace AppointmentAPI.Controllers
         [HttpDelete("id")]
         public async Task<IActionResult> DeleteUserID([FromHeader] int id) {
             var userTemp = await _usersService.DeleteUsersQuery(id);
+            return Ok(userTemp);
+        }
+
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateUserID([FromHeader] int userId, [FromBody] Users users)
+        {
+            var userTemp = await _usersService.UpdateUsersIDQuery(userId, users);
             return Ok(userTemp);
         }
     }
