@@ -6,19 +6,19 @@
     public class Users
     {
         [Key]
-        public int? userID { get; set; }
+        public int? UserID { get; set; }
 
         [Required]
-        public string? username { get; set; }
+        public string? Username { get; set; }
 
         [Required]
-        public string? email { get; set; }
+        public string? Email { get; set; }
 
         [Required]
-        public string? password { get; set; }
+        public string? Password { get; set; }
 
         [Required]
-        public int? roleID { get; set; }
+        public int? RoleID { get; set; }
 
     }
 }

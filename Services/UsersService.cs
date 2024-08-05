@@ -29,10 +29,10 @@ namespace AppointmentAPI.Services
         public async Task<Users> PostUsersIDQuery(Users users)
         {
             Users newUser = new Users();
-            newUser.username = users.username;
-            newUser.email = users.email;
-            newUser.password = users.password;
-            newUser.roleID = users.roleID;
+            newUser.Username = users.Username;
+            newUser.Email = users.Email;
+            newUser.Password = users.Password;
+            newUser.RoleID = users.RoleID;
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
@@ -58,20 +58,20 @@ namespace AppointmentAPI.Services
 
         private bool UsersExists(int id)
         {
-            return _context.Users.Any(e => e.userID == id);
+            return _context.Users.Any(e => e.UserID == id);
         }
 
         public async Task<bool> RegistrationQuery(Users users) {
-            bool userExists = await _context.Users.AnyAsync(x => x.email == users.email || x.username == users.username);
+            bool userExists = await _context.Users.AnyAsync(x => x.Email == users.Email || x.Username == users.Username);
 
             if (userExists) {
                 return false;
             }
             else {
                 Users account = new Users();
-              account.username = users.username;
-                account.password = users.password;
-                account.email = users.email;
+              account.Username = users.Username;
+                account.Password = users.Password;
+                account.Email = users.Email;
                 _context.Users.Add(account);
                 await _context.SaveChangesAsync();
                 return true;
