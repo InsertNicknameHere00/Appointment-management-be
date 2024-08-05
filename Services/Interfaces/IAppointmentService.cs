@@ -5,6 +5,8 @@
 
     public interface IAppointmentService
     {
+        Task<IEnumerable<Appointment>> GetAll();
+
         Task<int> CreateAsync(int userId);
 
         Task<int> EditAsync(int id, int userId, string status);

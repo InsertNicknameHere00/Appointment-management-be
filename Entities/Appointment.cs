@@ -2,6 +2,7 @@
 {
     using AppointmentAPI.Entities.Enums;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public class Appointment
     {
@@ -25,6 +26,7 @@
         [Required]
         public int UserId { get; set; }
 
+        [ForeignKey(nameof(UserId))]
         public virtual Users User { get; set; } = null!;
 
         // todo: Map with serviceid

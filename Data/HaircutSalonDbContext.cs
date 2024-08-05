@@ -11,9 +11,9 @@ namespace AppointmentAPI.Data
         {
         }
 
-        public DbSet<Users> Users { get; set; } = null!;
+        public DbSet<Users> Users { get; set; }
 
-        public DbSet<Appointment> Appointments { get; set; } = null!;
+        public DbSet<Appointment> Appointments { get; set; }
     }
 }
 

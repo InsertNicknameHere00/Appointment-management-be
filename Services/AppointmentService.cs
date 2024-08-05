@@ -5,6 +5,7 @@
     using AppointmentAPI.Entities.Enums;
     using AppointmentAPI.Services.Interfaces;
     using Microsoft.EntityFrameworkCore;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public class AppointmentService : IAppointmentService
@@ -15,6 +16,12 @@
         {
             this.dbContext = dbContext;
         }
+
+        public async Task<IEnumerable<Appointment>> GetAll()
+        {
+            return await this.dbContext.Appointments.ToListAsync();
+        }
+
 
         public async Task<int> CreateAsync(int userId)
         {
