@@ -2,6 +2,7 @@
 {
     using AppointmentAPI.Data;
     using AppointmentAPI.Entities;
+    using AppointmentAPI.Entities.Enums;
     using AppointmentAPI.Services.Interfaces;
     using Microsoft.EntityFrameworkCore;
     using System.Threading.Tasks;
@@ -15,34 +16,63 @@
             this.dbContext = dbContext;
         }
 
-        public Task<int> CreateAsync(string id, string userId)
+        public async Task<int> CreateAsync(int userId)
         {
-            throw new NotImplementedException();
+            Appointment appointment = new Appointment() 
+            { 
+                Status = StatusType.Available,
+                StartDate = DateTime.Now,
+                // TODO: get duration from service and add it to endDate
+                EndDate = DateTime.Now.AddMinutes(30),
+                UserId = userId,
+            };
+
+            await this.dbContext.Appointments.AddAsync(appointment);
+            await this.dbContext.SaveChangesAsync();
+
+            return appointment.Id;
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            Appointment appointment = await this.GetById(id);
+
+            this.dbContext.Appointments.Remove(appointment);
+            await this.dbContext.SaveChangesAsync();
         }
 
-        public Task EditAsync(int id, string userId)
+        public async Task<int> EditAsync(int id, int userId, string status)
         {
-            throw new NotImplementedException();
+            Appointment appointment = await this.GetById(id);
+            Enum.TryParse(typeof(StatusType), status.ToString(), out object? statusResult);
+
+            appointment.StartDate = DateTime.Now;
+            appointment.EndDate = DateTime.Now.AddMinutes(30);
+            appointment.Status = (StatusType)statusResult!;
+            appointment.UserId = userId;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return appointment.Id;
         }
 
-        public Task<bool> ExistsByIdAsync(int id)
+        public async Task<bool> ExistsByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            bool result = await this.dbContext.Appointments
+                                    .AnyAsync(a => a.Id == id);
+
+            return result;
         }
 
-        public Task<Appointment> GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<Appointment> GetById(int id)
+            => await this.dbContext.Appointments.FirstAsync(a => a.Id == id);
 
-        public Task<bool> IsUserOwner(string id, string userId)
+        public async Task<bool> IsUserOwner(int id, int userId)
         {
-            throw new NotImplementedException();
+            Appointment tempAppointment = await this.dbContext.Appointments
+                                                    .FirstAsync(a => a.Id == id);
+
+            return tempAppointment.UserId == userId;
         }
     }
 }

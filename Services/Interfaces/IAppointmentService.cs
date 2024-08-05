@@ -5,9 +5,9 @@
 
     public interface IAppointmentService
     {
-        Task<int> CreateAsync(string id, string userId);
+        Task<int> CreateAsync(int userId);
 
-        Task EditAsync(int id, string userId);
+        Task<int> EditAsync(int id, int userId, string status);
 
         Task DeleteAsync(int id);
 
@@ -15,6 +15,6 @@
 
         Task<Appointment> GetById(int id);
 
-        Task<bool> IsUserOwner(string id, string userId);
+        Task<bool> IsUserOwner(int id, int userId);
     }
 }
