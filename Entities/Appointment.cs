@@ -14,9 +14,6 @@
         public int Id { get; set; }
 
         [Required]
-        public int MyProperty { get; set; }
-
-        [Required]
         public StatusType Status { get; set; }
 
         [Required]
