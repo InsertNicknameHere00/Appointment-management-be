@@ -4,13 +4,13 @@ namespace AppointmentAPI.Services
 {
     public interface IAdminServices
     {
-        Task<List<AdminService>> GetAll();
-        AdminService GetById(int id);
-        Task<List<AdminService>> GetByServiceId(int id);
-        Task<List<AdminService>> GetByAdminId(int id);
-        bool Save(AdminService adminService);
+        Task<List<AdminService>> GetAllAdminServices();
+        Task<AdminService> GetAdminServicesById(int id);
+        Task<List<AdminService>> GetAdminServiceByServiceId(int id);
+        Task<List<AdminService>> GetAdminServiceByAdminId(int id);
+        Task<AdminService> Save(AdminService adminService);
 
-        bool Update(AdminService adminService);
-        bool Delete(int id);
+        Task<AdminService> Update(int id,AdminService adminService);
+        Task<bool> Delete(int id);
     }
 }

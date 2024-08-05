@@ -1,38 +1,71 @@
 ﻿using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
+using AppointmentAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace AppointmentAPI.Repository
 {
-    public class SalonServiceRepository : HaircutSalonDbContext,ISalonServiceRepository
+    public class SalonServiceRepository : ISalonServiceRepository
     {
-        public SalonServiceRepository(DbContextOptions<HaircutSalonDbContext> options) : base(options)
-        {
+        private readonly HaircutSalonDbContext _context;
+        public SalonServiceRepository(HaircutSalonDbContext context) { 
+            _context = context;
+            
         }
 
-        public async Task AddSalonService(SalonService salonService)
+        public async Task<SalonService> AddSalonService(SalonService salonService)
         {
-            throw new NotImplementedException();
+            await _context.SalonService.AddAsync(salonService);
+            await _context.SaveChangesAsync();
+            return salonService;
         }
 
-        public Task DeleteSalonService(int id)
+        public async Task<bool> DeleteSalonService(int id)
         {
-            throw new NotImplementedException();
+            var service = await _context.SalonService.FindAsync(id);
+            if (service != null)
+            {
+                _context.SalonService.Remove(service);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                throw new KeyNotFoundException("Problem with service ID.");
+            }
         }
 
         public async Task<List<SalonService>> GetAllSalonServices()
         {
-            return await SalonService.ToListAsync();
+            return await _context.SalonService.ToListAsync();
         }
 
-        public Task GetSalonServicesById(int serviceId)
+        public async Task<SalonService> GetSalonServicesById(int serviceId)
         {
-            throw new NotImplementedException();
+            var service=await _context.SalonService.FindAsync(serviceId);
+            if (service != null)
+            {
+                return service;
+            }
+            else
+            {
+                throw new KeyNotFoundException("Service not found.");
+            }
         }
 
-        public Task UpdateSalonService(int serviceId, SalonService salonService)
+        public async Task<SalonService> UpdateSalonService(int serviceId, SalonService salonService)
         {
-            throw new NotImplementedException();
+            if (serviceId == salonService.ServiceId)
+            {
+                _context.SalonService.Update(salonService);
+                await _context.SaveChangesAsync();
+                return salonService;
+            }
+            else
+            {
+                throw new KeyNotFoundException("Problem with updating...");
+            }
         }
+
     }
 }

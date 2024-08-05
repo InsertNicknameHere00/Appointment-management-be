@@ -8,7 +8,7 @@ namespace AppointmentAPI.Data
     {
 
         public DbSet<SalonService> SalonService { get; set; }
-        public DbSet<AdminService> AdminService { get; set; }
+        public DbSet<AdminService> AdminServices { get; set; }
         public HaircutSalonDbContext(DbContextOptions<HaircutSalonDbContext> options) : base(options)
         {
         }

@@ -1,4 +1,6 @@
 ﻿using AppointmentAPI.Data;
+using AppointmentAPI.Entities;
+using AppointmentAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,99 +9,52 @@ namespace AppointmentAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize(Roles ="Admin")]
-    public class SalonServiceController : Controller
+    public class SalonServiceController : ControllerBase
     {
-        private readonly HaircutSalonDbContext _context;
-        //private SalonService_service salonService=new SalonService_service(_context);
+        private readonly ISalonServices salonService;
 
-        public SalonServiceController(HaircutSalonDbContext context)
+        public SalonServiceController(ISalonServices _service)
         {
-            _context = context;
+            salonService = _service;
 
         }
 
-        // GET: api/SalonServices
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Entities.SalonService>>> GetAll()
+        public async Task<ActionResult<IEnumerable<SalonService>>> GetAll()
         {
-            //return (salonService.Get());
-            return await _context.SalonService.ToListAsync();
+            // return await salonService.GetAll();
+            var services = await salonService.GetAllSalonServices();
+            return Ok(services);
         }
 
-        // GET: api/SalonServices/1
         [HttpGet("{id}")]
-        public async Task<ActionResult<Entities.SalonService>> GetServiceById(int id)
+        public async Task<ActionResult<SalonService>> GetServiceById(int id)
         {
-            var _service = await _context.SalonService.FindAsync(id);
-
-            if (_service == null)
-            {
-                return NotFound();
-            }
-
-            return _service;
+            return await salonService.GetSalonServiceById(id);
+            
         }
 
-        // PUT: api/SalonServices/1
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditSalonService(int id, Entities.SalonService _service)
+        public async Task<IActionResult> UpdateSalonService(int id, SalonService _service)
         {
-            if (id != _service.ServiceId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(_service).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SalonServiceExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            await salonService.Update(id,_service);
+            return Ok();
         }
 
-        // POST: api/SalonServices
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Entities.SalonService>> AddSalonService(Entities.SalonService _service)
+        public async Task<ActionResult<SalonService>> AddSalonService(SalonService _service)
         {
-            _context.SalonService.Add(_service);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetSalonService", new { id = _service.ServiceId }, _service);
+            await salonService.Save(_service);
+            return Ok();
         }
 
-        // DELETE: api/SalonServices/1
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSalonService(int id)
         {
-            var service = await _context.SalonService.FindAsync(id);
-            if (service == null)
-            {
-                return NotFound();
-            }
-
-            _context.SalonService.Remove(service);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            await salonService.Delete(id);
+            return Ok();
         }
 
-        private bool SalonServiceExists(int id)
-        {
-            return _context.SalonService.Any(e => e.ServiceId == id);
-        }
+       
     }
 }

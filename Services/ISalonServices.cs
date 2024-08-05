@@ -4,11 +4,11 @@ namespace AppointmentAPI.Services
 {
     public interface ISalonServices
     {
-        Task<List<SalonService>> GetAll();
-        SalonService GetById(int id);
-        bool Save(SalonService salonService);
+        Task<List<SalonService>> GetAllSalonServices();
+        Task<SalonService> GetSalonServiceById(int id);
+        Task<SalonService> Save(SalonService salonService);
 
-        bool Update(SalonService salonService);
-        bool Delete(int id);
+        Task<SalonService> Update(int serviceId, SalonService salonService);
+        Task<bool> Delete(int id);
     }
 }

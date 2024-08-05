@@ -1,41 +1,44 @@
 ﻿using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
 using AppointmentAPI.Repository;
+using System.Runtime.InteropServices;
 
 namespace AppointmentAPI.Services
 {
-    public class SalonServices : ISalonServices
+    public class SalonServices:ISalonServices
     {
-        private readonly ISalonServiceRepository _salonServiceRepository;
+        private readonly ISalonServiceRepository _repository;
         public SalonServices(ISalonServiceRepository salonServiceRepository)
         {
-            _salonServiceRepository = salonServiceRepository;
+            _repository = salonServiceRepository;
         }
 
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            return await _repository.DeleteSalonService(id);
+
         }
 
-        public async Task<List<SalonService>> GetAll()
+        public async Task<List<SalonService>> GetAllSalonServices()
         {
-            return await _salonServiceRepository.GetAllSalonServices();
+            return await _repository.GetAllSalonServices();
         }
 
-        public SalonService GetById(int id)
+        public async Task<SalonService> GetSalonServiceById(int id)
         {
-            throw new NotImplementedException();
+            return await _repository.GetSalonServicesById(id);
         }
 
-        public bool Save(SalonService salonService)
+        public async Task<SalonService> Save(SalonService salonService)
         {
-            throw new NotImplementedException();
+            return await _repository.AddSalonService(salonService);
+            
         }
 
-        public bool Update(SalonService salonService)
+        public async Task<SalonService> Update(int serviceId,SalonService salonService)
         {
-            throw new NotImplementedException();
+           return await _repository.UpdateSalonService(serviceId,salonService);
         }
     }
 }
