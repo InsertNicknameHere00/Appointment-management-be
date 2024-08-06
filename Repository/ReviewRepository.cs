@@ -1,47 +1,80 @@
 ﻿using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppointmentAPI.Repository
 {
     public class ReviewRepository : IReviewRepository
     {
         private readonly HaircutSalonDbContext _context;
-        public ReviewRepository(HaircutSalonDbContext context) {
+        public ReviewRepository(HaircutSalonDbContext context)
+        {
             _context = context;
         }
-        public Task<Review> AddReview(Review review)
+        public async Task<Review> AddReview(Review review)
         {
-            throw new NotImplementedException();
+            var newReview = new Review
+            {
+                ServiceId = review.ServiceId,
+                UserId = review.UserId,
+                ReviewDescription = review.ReviewDescription
+            };
+
+            await _context.Review.AddAsync(newReview);
+            await _context.SaveChangesAsync();
+            return newReview;
         }
 
-        public Task<bool> DeleteReview(int id)
+        public async Task<bool> DeleteReview(int id)
         {
-            throw new NotImplementedException();
+            var review = await _context.Review.FindAsync(id);
+            if (review == null)
+            {
+                return false;
+            }
+            _context.Review.Remove(review);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public Task<List<Review>> GetAllReviews()
+        public async Task<List<Review>> GetAllReviews()
         {
-            throw new NotImplementedException();
+            return await _context.Review.ToListAsync();
         }
 
-        public Task<Review> GetReviewById(int reviewId)
+        public async Task<Review> GetReviewById(int reviewId)
         {
-            throw new NotImplementedException();
+            return await _context.Review.FindAsync(reviewId);
         }
 
-        public Task<List<Review>> GetReviewByServiceId(int serviceId)
+        public async Task<List<Review>> GetReviewByServiceId(int serviceId)
         {
-            throw new NotImplementedException();
+            return await _context.Review
+            .Where(r => r.ServiceId == serviceId)
+            .ToListAsync();
         }
 
-        public Task<List<Review>> GetReviewByUserId(int userId)
+        public async Task<List<Review>> GetReviewByUserId(int userId)
         {
-            throw new NotImplementedException();
+            return await _context.Review
+            .Where(r => r.UserId == userId)
+            .ToListAsync();
         }
 
-        public Task<Review> UpdateReview(int id, Review review)
+        public async Task<Review> UpdateReview(int id, Review review)
         {
-            throw new NotImplementedException();
+            var existingReview = await _context.Review.FindAsync(id);
+            if (existingReview == null)
+            {
+                return null;
+            }
+            existingReview.ReviewDescription = review.ReviewDescription;
+            existingReview.ServiceId = review.ServiceId;
+            existingReview.UserId = review.UserId;
+
+            await _context.SaveChangesAsync();
+            return existingReview;
         }
     }
 }
+    

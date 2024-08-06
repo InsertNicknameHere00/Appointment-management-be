@@ -10,39 +10,39 @@ namespace AppointmentAPI.Services
             _reviewRepository = reviewRepository;
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            return await _reviewRepository.DeleteReview(id);
         }
 
-        public Task<List<Review>> GetAllReviews()
+        public async Task<List<Review>> GetAllReviews()
         {
-            throw new NotImplementedException();
+            return await _reviewRepository.GetAllReviews();
         }
 
-        public Task<Review> GetReviewById(int id)
+        public async Task<Review> GetReviewById(int id)
         {
-            throw new NotImplementedException();
+            return await _reviewRepository.GetReviewById(id);
         }
 
-        public Task<List<Review>> GetReviewByServiceId(int id)
+        public async Task<List<Review>> GetReviewByServiceId(int id)
         {
-            throw new NotImplementedException();
+            return await _reviewRepository.GetReviewByServiceId(id);
         }
 
-        public Task<List<Review>> GetReviewByUserId(int id)
+        public async Task<List<Review>> GetReviewByUserId(int id)
         {
-            throw new NotImplementedException();
+            return await _reviewRepository.GetReviewByUserId(id);
         }
 
-        public Task<Review> Save(Review review)
+        public async Task<Review> Save(Review review)
         {
-            throw new NotImplementedException();
+            return await _reviewRepository.AddReview(review);
         }
 
-        public Task<Review> Update(int id, Review review)
+        public async Task<Review> Update(int id, Review review)
         {
-            throw new NotImplementedException();
+            return await _reviewRepository.UpdateReview(id, review);
         }
     }
 }

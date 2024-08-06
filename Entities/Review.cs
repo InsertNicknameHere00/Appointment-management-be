@@ -18,6 +18,6 @@ namespace AppointmentAPI.Entities
         public int UserId { get; set; }
 
         [Required]
-        public string Description {  get; set; }
+        public string ReviewDescription {  get; set; }
     }
 }
