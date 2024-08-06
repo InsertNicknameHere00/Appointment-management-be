@@ -45,7 +45,7 @@
             return Ok(appointmentTemp);
         }
 
-        [HttpPost("edit/id")]
+        [HttpPut("edit/id")]
         public async Task<IActionResult> Edit([FromHeader] int id, int userId, string status)
         {
             var appointmentTemp = await this.appointmentService.EditAsync(id, userId, status);
