@@ -8,7 +8,9 @@ namespace AppointmentAPI.Repository
         Task<SalonService> GetSalonServicesById(int serviceId);
         Task<SalonService> AddSalonService(SalonService salonService);
         Task<SalonService> UpdateSalonService(int serviceId,SalonService salonService);
-        Task<bool> DeleteSalonService(int id);
+        Task<bool> DeleteSalonService(SalonService service);
+
+        SalonService Search(int id);
         //Task GetSalonServiceByTitle(string title);
     }
 }

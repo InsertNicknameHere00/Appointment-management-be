@@ -15,24 +15,22 @@ namespace AppointmentAPI.Repository
 
         public async Task<SalonService> AddSalonService(SalonService salonService)
         {
-            await _context.SalonService.AddAsync(salonService);
+            var currentService=new SalonService();
+            currentService.ServiceId = salonService.ServiceId;
+            currentService.ServiceTitle = salonService.ServiceTitle;
+            currentService.ServiceDescription = salonService.ServiceDescription;
+            await _context.SalonService.AddAsync(currentService);
             await _context.SaveChangesAsync();
-            return salonService;
+            return currentService;
         }
 
-        public async Task<bool> DeleteSalonService(int id)
+        public async Task<bool> DeleteSalonService(SalonService service)
         {
-            var service = await _context.SalonService.FindAsync(id);
-            if (service != null)
-            {
+           //var service = await _context.SalonService.FindAsync(id);
                 _context.SalonService.Remove(service);
                 await _context.SaveChangesAsync();
                 return true;
-            }
-            else
-            {
-                throw new KeyNotFoundException("Problem with service ID.");
-            }
+            
         }
 
         public async Task<List<SalonService>> GetAllSalonServices()
@@ -42,29 +40,33 @@ namespace AppointmentAPI.Repository
 
         public async Task<SalonService> GetSalonServicesById(int serviceId)
         {
-            var service=await _context.SalonService.FindAsync(serviceId);
-            if (service != null)
-            {
-                return service;
-            }
-            else
-            {
-                throw new KeyNotFoundException("Service not found.");
-            }
+            return await _context.SalonService.FindAsync(serviceId);
+            
         }
 
         public async Task<SalonService> UpdateSalonService(int serviceId, SalonService salonService)
         {
-            if (serviceId == salonService.ServiceId)
+           var currentService = await _context.SalonService.FindAsync(serviceId);
+            if (currentService!=null)
             {
-                _context.SalonService.Update(salonService);
+                currentService.ServiceId=serviceId;
+                currentService.ServiceTitle=salonService.ServiceTitle;
+                currentService.ServiceDescription=salonService.ServiceDescription;
+                _context.SalonService.Update(currentService);
                 await _context.SaveChangesAsync();
-                return salonService;
+                return currentService;
             }
             else
             {
-                throw new KeyNotFoundException("Problem with updating...");
+                throw new KeyNotFoundException();
             }
+        }
+
+        public SalonService Search(int id)
+        {
+            var service = _context.SalonService.Find(id);
+            return service;
+
         }
 
     }

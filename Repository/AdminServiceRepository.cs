@@ -14,9 +14,15 @@ namespace AppointmentAPI.Repository
         }
        public async Task<AdminService> AddAdminService(AdminService adminService)
         {
-            await _context.AdminServices.AddAsync(adminService);
+            var currentService = new AdminService();
+            currentService.Id = adminService.Id;
+            currentService.ServiceId = adminService.ServiceId;
+            currentService.UserId = adminService.UserId;
+            currentService.ServiceDuration = adminService.ServiceDuration;
+            currentService.ServicePrice = adminService.ServicePrice;
+            await _context.AdminServices.AddAsync(currentService);
             await _context.SaveChangesAsync();
-            return adminService;
+            return currentService;
         }
 
         public async Task<bool> DeleteAdminService(int id)
@@ -30,7 +36,7 @@ namespace AppointmentAPI.Repository
             }
             else
             {
-                throw new KeyNotFoundException("Problem...");
+                throw new KeyNotFoundException();
             }
         }
 
@@ -49,7 +55,7 @@ namespace AppointmentAPI.Repository
             }
             else
             {
-                throw new KeyNotFoundException("Not found...");
+                throw new KeyNotFoundException();
             }
         }
 
@@ -66,16 +72,23 @@ namespace AppointmentAPI.Repository
 
         public async Task<AdminService> UpdateAdminService(int id,AdminService adminService)
         {
-            if (id == adminService.Id)
+            var currentService = await _context.AdminServices.FindAsync(id);
+            if (currentService != null)
             {
-                _context.AdminServices.Update(adminService);
+                currentService.Id = id;
+                currentService.ServiceId = adminService.ServiceId;
+                currentService.UserId = adminService.UserId;
+                currentService.ServiceDuration = adminService.ServiceDuration;
+                currentService.ServicePrice = adminService.ServicePrice;
+                _context.AdminServices.Update(currentService);
                 await _context.SaveChangesAsync();
-                return adminService;
+                return currentService;
             }
             else
             {
-                throw new KeyNotFoundException("Problem with updating...");
+                throw new KeyNotFoundException();
             }
+            
         }
     }
 }

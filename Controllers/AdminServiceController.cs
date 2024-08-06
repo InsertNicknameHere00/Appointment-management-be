@@ -1,6 +1,7 @@
 ﻿using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
 using AppointmentAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,32 +28,34 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AdminService>> GetServiceById(int id)
+        public async Task<ActionResult<AdminService>> GetServiceById([FromHeader] int id)
         {
-            return await adminService.GetAdminServicesById(id);
+            var service = await adminService.GetAdminServicesById(id);
+            return Ok(service);
             
         }
 
+        //[Authorize(Roles ="Administrator")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAdminService(int id, AdminService _service)
+        public async Task<IActionResult> UpdateAdminService([FromHeader] int id, [FromBody] AdminService _service)
         {
-            await adminService.Update(id,_service);
-            return Ok();
+            var service = await adminService.Update(id,_service);
+            return Ok(service);
         }
 
 
         [HttpPost]
-        public async Task<ActionResult<AdminService>> AddAdminService(AdminService _service)
+        public async Task<ActionResult<AdminService>> AddAdminService([FromBody] AdminService _service)
         {
-            await adminService.Save(_service);
-            return Ok();
+            var service = await adminService.Save(_service);
+            return Ok(service);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAdminService(int id)
+        public async Task<IActionResult> DeleteAdminService([FromHeader] int id)
         {
-            await adminService.Delete(id);
-            return Ok();
+            var service = await adminService.Delete(id);
+            return Ok(service);
         }
 
        

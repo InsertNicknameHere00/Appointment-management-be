@@ -16,7 +16,17 @@ namespace AppointmentAPI.Services
 
         public async Task<bool> Delete(int id)
         {
-            return await _repository.DeleteSalonService(id);
+            var result=_repository.Search(id);
+            if (result != null)
+            {
+                await _repository.DeleteSalonService(result);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            //return await _repository.DeleteSalonService(id);
 
         }
 
@@ -38,7 +48,17 @@ namespace AppointmentAPI.Services
 
         public async Task<SalonService> Update(int serviceId,SalonService salonService)
         {
-           return await _repository.UpdateSalonService(serviceId,salonService);
+            /*var result = _repository.Search(serviceId);
+            if (result != null)
+            {
+                await _repository.UpdateSalonService(serviceId,result);
+                return result;
+            }
+            else
+            {
+                throw new Exception();
+            }*/
+            return await _repository.UpdateSalonService(serviceId,salonService);
         }
     }
 }

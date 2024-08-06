@@ -18,5 +18,8 @@ namespace AppointmentAPI.Entities
         public int ServiceDuration { get; set; }
         [Required]
         public decimal ServicePrice { get; set; }
+
+        //public virtual Users User {get;set;}
+        //public virtual SalonService SalonService {get;set;}
     }
 }

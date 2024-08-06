@@ -8,7 +8,6 @@ namespace AppointmentAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles ="Admin")]
     public class SalonServiceController : ControllerBase
     {
         private readonly ISalonServices salonService;
@@ -22,37 +21,38 @@ namespace AppointmentAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SalonService>>> GetAll()
         {
-            // return await salonService.GetAll();
             var services = await salonService.GetAllSalonServices();
             return Ok(services);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<SalonService>> GetServiceById(int id)
+        public async Task<ActionResult<SalonService>> GetServiceById([FromHeader] int id)
         {
-            return await salonService.GetSalonServiceById(id);
+            var service= await salonService.GetSalonServiceById(id);
+            return Ok(service);
             
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSalonService(int id, SalonService _service)
+        public async Task<IActionResult> UpdateSalonService([FromHeader] int id,[FromBody] SalonService _service)
         {
-            await salonService.Update(id,_service);
-            return Ok();
+            //try-catch
+            var service=await salonService.Update(id,_service);
+            return Ok(service);
         }
 
         [HttpPost]
-        public async Task<ActionResult<SalonService>> AddSalonService(SalonService _service)
+        public async Task<ActionResult<SalonService>> AddSalonService([FromBody] SalonService _service)
         {
-            await salonService.Save(_service);
-            return Ok();
+            var service= await salonService.Save(_service);
+            return Ok(service);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSalonService(int id)
+        public async Task<IActionResult> DeleteSalonService([FromHeader] int id)
         {
-            await salonService.Delete(id);
-            return Ok();
+            var service=await salonService.Delete(id);
+            return Ok(service);
         }
 
        
