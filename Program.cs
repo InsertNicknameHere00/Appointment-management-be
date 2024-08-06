@@ -1,5 +1,6 @@
 using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
+using AppointmentAPI.Repository;
 using AppointmentAPI.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,7 +23,10 @@ builder.Services.AddDbContext<HaircutSalonDbContext>(options => options.UseSqlSe
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<UsersService>();
+builder.Services.AddScoped<IUsersServices ,UsersServices>();
+builder.Services.AddScoped<IUsersServiceRepository, UsersServiceRepository>();
+builder.Services.AddScoped(typeof(IUsersServices), (typeof(UsersServices)));
+builder.Services.AddScoped(typeof(IUsersServiceRepository), (typeof(UsersServiceRepository)));
 
 var app = builder.Build();  
 
