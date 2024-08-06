@@ -6,7 +6,7 @@ namespace AppointmentAPI.Entities
     public class AdminService
     {
         [Key]
-        public int Id { get; set; }
+        public int AdminServicesId { get; set; }
 
         [Required]
         [ForeignKey("ServiceId")]
@@ -20,6 +20,6 @@ namespace AppointmentAPI.Entities
         public decimal ServicePrice { get; set; }
 
         //public virtual Users User {get;set;}
-        //public virtual SalonService SalonService {get;set;}
+        // public virtual SalonService SalonService { get; set; }
     }
 }

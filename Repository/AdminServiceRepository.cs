@@ -12,22 +12,25 @@ namespace AppointmentAPI.Repository
             _context = context;
 
         }
-       public async Task<AdminService> AddAdminService(AdminService adminService)
+        public async Task<AdminService> AddAdminService(AdminService adminService)
         {
-            var currentService = new AdminService();
-            currentService.Id = adminService.Id;
-            currentService.ServiceId = adminService.ServiceId;
-            currentService.UserId = adminService.UserId;
-            currentService.ServiceDuration = adminService.ServiceDuration;
-            currentService.ServicePrice = adminService.ServicePrice;
-            await _context.AdminServices.AddAsync(currentService);
+            /* var currentService = new AdminService();
+             currentService.Id = adminService.Id;
+             currentService.ServiceId = adminService.ServiceId;
+             currentService.UserId = adminService.UserId;
+             currentService.ServiceDuration = adminService.ServiceDuration;
+             currentService.ServicePrice = adminService.ServicePrice;*/
+            await _context.AdminServices.AddAsync(adminService);
             await _context.SaveChangesAsync();
-            return currentService;
+            return adminService;
         }
 
-        public async Task<bool> DeleteAdminService(int id)
+        public async Task<bool> DeleteAdminService(AdminService adminService)
         {
-            var service = await _context.AdminServices.FindAsync(id);
+            _context.AdminServices.Remove(adminService);
+            await _context.SaveChangesAsync();
+            return true;
+            /*var service = await _context.AdminServices.FindAsync(id);
             if (service != null)
             {
                 _context.AdminServices.Remove(service);
@@ -37,7 +40,7 @@ namespace AppointmentAPI.Repository
             else
             {
                 throw new KeyNotFoundException();
-            }
+            }*/
         }
 
         public async Task<List<AdminService>> GetAdminServiceByAdminId(int adminId)
@@ -48,20 +51,21 @@ namespace AppointmentAPI.Repository
 
         public async Task<AdminService> GetAdminServiceById(int id)
         {
-            var service = await _context.AdminServices.FindAsync(id);
-            if (service != null)
+            //var service = await _context.AdminServices.FindAsync(id);
+            return await _context.AdminServices.FindAsync(id);
+            /*if (service != null)
             {
                 return service;
             }
             else
             {
                 throw new KeyNotFoundException();
-            }
+            }*/
         }
 
         public async Task<List<AdminService>> GetAdminServiceByServiceId(int serviceId)
         {
-           List<AdminService> services=_context.AdminServices.Where(s=>s.ServiceId == serviceId).ToList();
+            List<AdminService> services = _context.AdminServices.Where(s => s.ServiceId == serviceId).ToList();
             return services;
         }
 
@@ -70,25 +74,35 @@ namespace AppointmentAPI.Repository
             return await _context.AdminServices.ToListAsync();
         }
 
-        public async Task<AdminService> UpdateAdminService(int id,AdminService adminService)
+        public async Task<AdminService> UpdateAdminService(int id, AdminService adminService)
         {
-            var currentService = await _context.AdminServices.FindAsync(id);
-            if (currentService != null)
-            {
-                currentService.Id = id;
-                currentService.ServiceId = adminService.ServiceId;
-                currentService.UserId = adminService.UserId;
-                currentService.ServiceDuration = adminService.ServiceDuration;
-                currentService.ServicePrice = adminService.ServicePrice;
-                _context.AdminServices.Update(currentService);
-                await _context.SaveChangesAsync();
-                return currentService;
-            }
-            else
-            {
-                throw new KeyNotFoundException();
-            }
-            
+            /* var currentService = await _context.AdminServices.FindAsync(id);
+             if (currentService != null)
+             {
+                 currentService.Id = id;
+                 currentService.ServiceId = adminService.ServiceId;
+                 currentService.UserId = adminService.UserId;
+                 currentService.ServiceDuration = adminService.ServiceDuration;
+                 currentService.ServicePrice = adminService.ServicePrice;
+                 _context.AdminServices.Update(currentService);
+                 await _context.SaveChangesAsync();
+                 return currentService;
+             }
+             else
+             {
+                 throw new KeyNotFoundException();
+             }*/
+            _context.AdminServices.Update(adminService);
+            await _context.SaveChangesAsync();
+            return adminService;
+
+        }
+
+        public AdminService Search(int id)
+        {
+            var service = _context.AdminServices.Find(id);
+            return service;
+
         }
     }
 }
