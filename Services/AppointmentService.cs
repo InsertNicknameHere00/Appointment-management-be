@@ -3,6 +3,7 @@
     using AppointmentAPI.Data;
     using AppointmentAPI.Entities;
     using AppointmentAPI.Entities.Enums;
+    using AppointmentAPI.Repositories.Interfaces;
     using AppointmentAPI.Services.Interfaces;
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
@@ -10,20 +11,20 @@
 
     public class AppointmentService : IAppointmentService
     {
-        private readonly HaircutSalonDbContext dbContext;
+        private readonly IAppointmentRepository repository;
 
-        public AppointmentService(HaircutSalonDbContext dbContext)
+        public AppointmentService(IAppointmentRepository repository)
         {
-            this.dbContext = dbContext;
+            this.repository = repository;
         }
 
         public async Task<IEnumerable<Appointment>> GetAll()
         {
-            return await this.dbContext.Appointments.ToListAsync();
+            return await repository.GetAll();
         }
 
 
-        public async Task<int> CreateAsync(int userId)
+        public async Task<Appointment> CreateAsync(int userId)
         {
             Appointment appointment = new Appointment() 
             { 
@@ -34,18 +35,16 @@
                 UserId = userId,
             };
 
-            await this.dbContext.Appointments.AddAsync(appointment);
-            await this.dbContext.SaveChangesAsync();
+            var result = await this.repository.Add(appointment);
 
-            return appointment.Id;
+            return result;
         }
 
         public async Task DeleteAsync(int id)
         {
             Appointment appointment = await this.GetById(id);
 
-            this.dbContext.Appointments.Remove(appointment);
-            await this.dbContext.SaveChangesAsync();
+            await this.repository.Delete(appointment);
         }
 
         public async Task<int> EditAsync(int id, int userId, string status)
@@ -58,28 +57,22 @@
             appointment.Status = (StatusType)statusResult!;
             appointment.UserId = userId;
 
-            await this.dbContext.SaveChangesAsync();
+            await this.repository.Update(appointment);
 
             return appointment.Id;
         }
 
         public async Task<bool> ExistsByIdAsync(int id)
         {
-            bool result = await this.dbContext.Appointments
-                                    .AnyAsync(a => a.Id == id);
-
-            return result;
+            return await this.repository.ExistsByIdAsync(id);
         }
 
         public async Task<Appointment> GetById(int id)
-            => await this.dbContext.Appointments.FirstAsync(a => a.Id == id);
+            => await this.repository.GetById(id);
 
         public async Task<bool> IsUserOwner(int id, int userId)
         {
-            Appointment tempAppointment = await this.dbContext.Appointments
-                                                    .FirstAsync(a => a.Id == id);
-
-            return tempAppointment.UserId == userId;
+            return await this.repository.IsUserOwner(id, userId);
         }
     }
 }

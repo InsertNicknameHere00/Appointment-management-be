@@ -1,45 +1,66 @@
 ﻿namespace AppointmentAPI.Repositories
 {
+    using AppointmentAPI.Data;
     using AppointmentAPI.Entities;
     using AppointmentAPI.Repositories.Interfaces;
+    using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public class AppointmentRepository : IAppointmentRepository
     {
-        public Task<Appointment> Add(Appointment appointment)
+        private readonly HaircutSalonDbContext dbContext;
+
+        public AppointmentRepository(HaircutSalonDbContext dbContext)
         {
-            throw new NotImplementedException();
+            this.dbContext = dbContext;
         }
 
-        public Task<Appointment> Delete(int id)
+        public async Task<Appointment> Add(Appointment appointment)
         {
-            throw new NotImplementedException();
+            var tempAppointment = await this.dbContext.Appointments.AddAsync(appointment);
+
+            await this.dbContext.SaveChangesAsync();
+
+            return tempAppointment.Entity;
         }
 
-        public Task<bool> ExistsByIdAsync(int id)
+        public async Task Update(Appointment appointment)
         {
-            throw new NotImplementedException();
+            this.dbContext.Appointments.Update(appointment);
+            await this.dbContext.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<Appointment>> GetAll()
+        public async Task Delete(Appointment appointment)
         {
-            throw new NotImplementedException();
+            this.dbContext.Appointments.Remove(appointment);
+            await this.dbContext.SaveChangesAsync();
         }
 
-        public Task<Appointment> GetById(int id)
+        public async Task<bool> ExistsByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            bool result = await this.dbContext.Appointments
+                                     .AnyAsync(a => a.Id == id);
+
+            return result;
         }
 
-        public Task<bool> IsUserOwner(int id, int userId)
+        public async Task<IEnumerable<Appointment>> GetAll()
         {
-            throw new NotImplementedException();
+            return await this.dbContext.Appointments.ToListAsync();
         }
 
-        public Task<Appointment> Update(Appointment appointment)
+        public async Task<Appointment> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await this.dbContext.Appointments.FirstAsync(a => a.Id == id);
+        }
+
+        public async Task<bool> IsUserOwner(int id, int userId)
+        {
+            Appointment tempAppointment = await this.dbContext.Appointments
+                                                    .FirstAsync(a => a.Id == id);
+
+            return tempAppointment.UserId == userId;
         }
     }
 }

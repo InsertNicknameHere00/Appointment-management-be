@@ -10,9 +10,9 @@
 
         Task<Appointment> Add(Appointment appointment);
 
-        Task<Appointment> Update(Appointment appointment);
+        Task Update(Appointment appointment);
 
-        Task<Appointment> Delete(int id);
+        Task Delete(Appointment appointment);
 
         Task<bool> ExistsByIdAsync(int id);
 

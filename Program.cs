@@ -1,5 +1,7 @@
 using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
+using AppointmentAPI.Repositories;
+using AppointmentAPI.Repositories.Interfaces;
 using AppointmentAPI.Services;
 using AppointmentAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
@@ -26,6 +28,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
 var app = builder.Build();  
 

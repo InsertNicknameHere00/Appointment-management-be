@@ -20,24 +20,38 @@
         [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
-            var appointmentsTemp = await this.appointmentService.GetAll();
+            try
+            {
+                var appointmentsTemp = await this.appointmentService.GetAll();
 
-            return Ok(appointmentsTemp);
+
+                return Ok(appointmentsTemp);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                 "Error retrieving data from the database");
+            }
         }
 
         [HttpGet("id")]
         public async Task<IActionResult> GetById([FromHeader] int id)
         {
-            var appointmentTemp = await this.appointmentService.GetById(id);
-            if (appointmentTemp == null)
-            { 
+            var appointmentExists = await this.appointmentService.ExistsByIdAsync(id);
+            if (appointmentExists == false)
+            {
                 return NotFound();
+            } 
+            else
+            {
+                var appointmentTemp = await this.appointmentService.GetById(id);
+
+                return Ok(appointmentTemp);
             }
 
-            return Ok(appointmentTemp);
         }
 
-        [HttpPost("id")]
+        [HttpPost("add/id")]
         public async Task<IActionResult> Add([FromHeader] int userId)
         {
             var appointmentTemp = await this.appointmentService.CreateAsync(userId);
