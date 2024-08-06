@@ -25,6 +25,10 @@ builder.Services.AddScoped(typeof(ISalonServiceRepository), typeof(SalonServiceR
 builder.Services.AddScoped(typeof(IAdminServiceRepository), typeof(AdminServiceRepository));
 builder.Services.AddScoped<IAdminServices,AdminServices>();
 
+builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
+builder.Services.AddScoped<IReviewService, ReviewService>();
+
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
