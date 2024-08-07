@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,9 @@ builder.Services.AddControllers();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HaircutSalonDbContext>(options => options.UseSqlServer(connectionString));
 
+builder.Services.Configure<EmailSendService>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddTransient<IEmailSendService, EmailSendService>();
+
 builder.Services.AddScoped<ISalonServices, SalonServices>();
 builder.Services.AddScoped(typeof(ISalonServiceRepository), typeof(SalonServiceRepository));
 builder.Services.AddScoped(typeof(IAdminServiceRepository), typeof(AdminServiceRepository));
@@ -34,16 +38,14 @@ builder.Services.AddScoped<IAdminServices,AdminServices>();
 builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
 builder.Services.AddScoped<IReviewService, ReviewService>();
 
-
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IUsersServices ,UsersServices>();
+builder.Services.AddScoped<IUsersServices, UsersServices>();
 builder.Services.AddScoped<IUsersServiceRepository, UsersServiceRepository>();
 builder.Services.AddScoped(typeof(IUsersServices), (typeof(UsersServices)));
 builder.Services.AddScoped(typeof(IUsersServiceRepository), (typeof(UsersServiceRepository)));
 
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();  
 
