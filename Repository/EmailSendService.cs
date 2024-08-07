@@ -25,25 +25,6 @@ namespace AppointmentAPI.Repository
 
             var builder = new BodyBuilder();
 
-        /*    if(mailRequest.Attachments != null) {
-
-                byte[] filebytes;
-
-                foreach(var file in mailRequest.Attachments) 
-                {
-
-                    if(file.Length >0) 
-                    {
-                        using (var ms = new MemoryStream()) 
-                        {
-                            file.CopyTo(ms);
-                            filebytes = ms.ToArray();
-                        }
-                        builder.Attachments.Add(file.Name, filebytes, ContentType.Parse(file.ContentType));
-                    }
-                }
-            }*/
-
             builder.HtmlBody = mailRequest.Body;
             email.Body = builder.ToMessageBody();
 
