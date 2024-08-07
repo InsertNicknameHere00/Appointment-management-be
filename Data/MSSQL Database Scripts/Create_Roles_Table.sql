@@ -6,3 +6,8 @@ CREATE TABLE Roles(
 	RoleName varchar(10) NOT NULL
 );
 GO
+
+INSERT INTO Roles (RoleName)
+VALUES ('Admin');
+INSERT INTO Roles (RoleName)
+VALUES ('User');
