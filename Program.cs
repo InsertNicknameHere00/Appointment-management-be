@@ -9,6 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole(options =>
+{
+   // options.IncludeScopes = true;
+    options.TimestampFormat = "HH:mm:ss ";
+});
 
 // Add services to the container.
 
@@ -37,6 +43,7 @@ builder.Services.AddScoped<IUsersServices ,UsersServices>();
 builder.Services.AddScoped<IUsersServiceRepository, UsersServiceRepository>();
 builder.Services.AddScoped(typeof(IUsersServices), (typeof(UsersServices)));
 builder.Services.AddScoped(typeof(IUsersServiceRepository), (typeof(UsersServiceRepository)));
+
 
 var app = builder.Build();  
 

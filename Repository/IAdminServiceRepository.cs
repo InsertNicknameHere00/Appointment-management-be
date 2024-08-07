@@ -6,11 +6,12 @@ namespace AppointmentAPI.Repository
     {
 
         Task<List<AdminService>> GetAllAdminServices();
-       Task <List<AdminService>> GetAdminServiceByServiceId(int serviceId);
-       Task <List<AdminService>> GetAdminServiceByAdminId(int adminId);
+        Task<List<AdminService>> GetAdminServiceByServiceId(int serviceId);
+        Task<List<AdminService>> GetAdminServiceByAdminId(int adminId);
         Task<AdminService> GetAdminServiceById(int id);
         Task<AdminService> AddAdminService(AdminService adminService);
         Task<AdminService> UpdateAdminService(int id, AdminService adminService);
-        Task<bool> DeleteAdminService(int id);
+        Task<bool> DeleteAdminService(AdminService adminService);
+        AdminService Search(int id);
     }
 }
