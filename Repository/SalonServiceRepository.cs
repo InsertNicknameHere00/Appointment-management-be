@@ -16,13 +16,6 @@ namespace AppointmentAPI.Repository
 
         public async Task<SalonService> AddSalonService(SalonService salonService)
         {
-            /*var currentService = new SalonService();
-            currentService.ServiceId = salonService.ServiceId;
-            currentService.ServiceTitle = salonService.ServiceTitle;
-            currentService.ServiceDescription = salonService.ServiceDescription;
-            await _context.SalonService.AddAsync(currentService);
-            await _context.SaveChangesAsync();
-            return currentService;*/
             await _context.SalonService.AddAsync(salonService);
             await _context.SaveChangesAsync();
             return salonService;
@@ -30,7 +23,6 @@ namespace AppointmentAPI.Repository
 
         public async Task<bool> DeleteSalonService(SalonService service)
         {
-            //var service = await _context.SalonService.FindAsync(id);
             _context.SalonService.Remove(service);
             await _context.SaveChangesAsync();
             return true;
@@ -50,20 +42,6 @@ namespace AppointmentAPI.Repository
 
         public async Task<SalonService> UpdateSalonService(int serviceId, SalonService salonService)
         {
-            /*  var currentService = await _context.SalonService.FindAsync(serviceId);
-              if (currentService != null)
-              {
-                  currentService.ServiceId = serviceId;
-                  currentService.ServiceTitle = salonService.ServiceTitle;
-                  currentService.ServiceDescription = salonService.ServiceDescription;
-                  _context.SalonService.Update(currentService);
-                  await _context.SaveChangesAsync();
-                  return currentService;
-              }
-              else
-              {
-                  throw new KeyNotFoundException();
-              }*/
             _context.SalonService.Update(salonService);
             await _context.SaveChangesAsync();
             return salonService;

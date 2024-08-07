@@ -23,7 +23,7 @@ namespace AppointmentAPI.Services
             }
             else
             {
-                return false;
+                throw new KeyNotFoundException();
             }
             //return await _repository.DeleteAdminService(id);
 
@@ -90,7 +90,7 @@ namespace AppointmentAPI.Services
             if (adminService != null)
             {
                 var result = new AdminService();
-                result.AdminServicesId = adminService.AdminServicesId;
+                result.Id = adminService.Id;
                 result.ServiceId = adminService.ServiceId;
                 result.UserId = adminService.UserId;
                 result.ServiceDuration = adminService.ServiceDuration;
@@ -112,7 +112,7 @@ namespace AppointmentAPI.Services
             var result = await _repository.GetAdminServiceById(serviceId);
             if (result != null)
             {
-                result.AdminServicesId = serviceId;
+                result.Id = serviceId;
                 result.ServiceId = adminService.ServiceId;
                 result.UserId = adminService.UserId;
                 result.ServiceDuration = adminService.ServiceDuration;

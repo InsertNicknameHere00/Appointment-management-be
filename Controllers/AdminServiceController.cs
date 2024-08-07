@@ -13,11 +13,12 @@ namespace AppointmentAPI.Controllers
     public class AdminServiceController : ControllerBase
     {
         private readonly IAdminServices adminService;
+        private readonly ILogger<AdminServiceController> logger;
 
-        public AdminServiceController(IAdminServices _service)
+        public AdminServiceController(IAdminServices _service, ILogger<AdminServiceController> logger)
         {
             adminService = _service;
-
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -26,14 +27,17 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var services = await adminService.GetAllAdminServices();
+                logger.LogInformation("Successful request");
                 return Ok(services);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message }); 
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
+                logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
             //var services = await adminService.GetAllAdminServices();
@@ -46,14 +50,17 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var service = await adminService.GetAdminServicesById(id);
+                logger.LogInformation("Successful request");
                 return Ok(service);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message }); 
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
+                logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
             //var service = await adminService.GetAdminServicesById(id);
@@ -68,14 +75,17 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var service = await adminService.Update(id, _service);
+                logger.LogInformation("Successful request");
                 return Ok(service);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message }); 
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
+                logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
             //var service = await adminService.Update(id, _service);
@@ -89,14 +99,17 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var service = await adminService.Save(_service);
+                logger.LogInformation("Successful request");
                 return Ok(service);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message }); 
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
+                logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
             // var service = await adminService.Save(_service);
@@ -109,14 +122,17 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var service = await adminService.Delete(id);
-                return Ok();
+                logger.LogInformation("Successful request");
+                return Ok(service);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message }); 
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
+                logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
             //var service = await adminService.Delete(id);
@@ -124,19 +140,22 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpGet("user/{id}")]
-        public async Task<ActionResult<IEnumerable<AdminService>>> GetAllAdminServicesByAdminId([FromHeader]int adminId)
+        public async Task<ActionResult<IEnumerable<AdminService>>> GetAllAdminServicesByAdminId([FromHeader] int adminId)
         {
             try
             {
                 var services = await adminService.GetAdminServiceByAdminId(adminId);
+                logger.LogInformation("Successful request");
                 return Ok(services);
             }
             catch (KeyNotFoundException ex)
             {
+                logger.LogInformation("Problem with DB");
                 return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
+                logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
         }
@@ -147,14 +166,17 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var services = await adminService.GetAdminServiceByServiceId(serviceId);
+                logger.LogInformation("Successful request");
                 return Ok(services);
             }
             catch (KeyNotFoundException ex)
             {
+                logger.LogInformation("Problem with DB");
                 return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
+                logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
             //var services = await adminService.GetAllAdminServices();

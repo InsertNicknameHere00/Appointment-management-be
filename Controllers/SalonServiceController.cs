@@ -3,6 +3,8 @@ using AppointmentAPI.Entities;
 using AppointmentAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Transactions;
 
 namespace AppointmentAPI.Controllers
 {
@@ -11,10 +13,12 @@ namespace AppointmentAPI.Controllers
     public class SalonServiceController : ControllerBase
     {
         private readonly ISalonServices salonService;
+        private readonly ILogger<SalonServiceController> logger;
 
-        public SalonServiceController(ISalonServices _service)
+        public SalonServiceController(ISalonServices _service, ILogger<SalonServiceController> _logger)
         {
             salonService = _service;
+            logger = _logger;
 
         }
 
@@ -24,14 +28,17 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var services = await salonService.GetAllSalonServices();
+                logger.LogInformation("Successful request");
                 return Ok(services);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message }); 
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
+                logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
             //var services = await salonService.GetAllSalonServices();
@@ -46,14 +53,17 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var services = await salonService.GetSalonServiceById(id);
+                logger.LogInformation("Successful request");
                 return Ok(services);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message }); 
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
+                logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
 
@@ -68,14 +78,17 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var services = await salonService.Update(id, _service);
+                logger.LogInformation("Successful request");
                 return Ok(services);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message }); 
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception)
             {
+                logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
         }
@@ -86,14 +99,17 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var services = await salonService.Save(_service);
+                logger.LogInformation("Successful request");
                 return Ok(services);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message }); 
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
+                logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
             //var service = await salonService.Save(_service);
@@ -106,14 +122,17 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var services = await salonService.Delete(id);
-                return Ok();
+                logger.LogInformation("Successful request");
+                return Ok(services);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message }); 
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
+                logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
             // var service = await salonService.Delete(id);

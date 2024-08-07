@@ -6,7 +6,7 @@ namespace AppointmentAPI.Entities
     public class AdminService
     {
         [Key]
-        public int AdminServicesId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [ForeignKey("ServiceId")]

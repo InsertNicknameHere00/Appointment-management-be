@@ -27,7 +27,7 @@ namespace AppointmentAPI.Services
             }
             else
             {
-                return false;
+                throw new KeyNotFoundException();
             }
             //return await _repository.DeleteSalonService(id);
 

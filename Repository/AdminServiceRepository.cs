@@ -14,12 +14,6 @@ namespace AppointmentAPI.Repository
         }
         public async Task<AdminService> AddAdminService(AdminService adminService)
         {
-            /* var currentService = new AdminService();
-             currentService.Id = adminService.Id;
-             currentService.ServiceId = adminService.ServiceId;
-             currentService.UserId = adminService.UserId;
-             currentService.ServiceDuration = adminService.ServiceDuration;
-             currentService.ServicePrice = adminService.ServicePrice;*/
             await _context.AdminServices.AddAsync(adminService);
             await _context.SaveChangesAsync();
             return adminService;
@@ -30,17 +24,6 @@ namespace AppointmentAPI.Repository
             _context.AdminServices.Remove(adminService);
             await _context.SaveChangesAsync();
             return true;
-            /*var service = await _context.AdminServices.FindAsync(id);
-            if (service != null)
-            {
-                _context.AdminServices.Remove(service);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            else
-            {
-                throw new KeyNotFoundException();
-            }*/
         }
 
         public async Task<List<AdminService>> GetAdminServiceByAdminId(int adminId)
@@ -51,16 +34,8 @@ namespace AppointmentAPI.Repository
 
         public async Task<AdminService> GetAdminServiceById(int id)
         {
-            //var service = await _context.AdminServices.FindAsync(id);
             return await _context.AdminServices.FindAsync(id);
-            /*if (service != null)
-            {
-                return service;
-            }
-            else
-            {
-                throw new KeyNotFoundException();
-            }*/
+           
         }
 
         public async Task<List<AdminService>> GetAdminServiceByServiceId(int serviceId)
@@ -76,22 +51,7 @@ namespace AppointmentAPI.Repository
 
         public async Task<AdminService> UpdateAdminService(int id, AdminService adminService)
         {
-            /* var currentService = await _context.AdminServices.FindAsync(id);
-             if (currentService != null)
-             {
-                 currentService.Id = id;
-                 currentService.ServiceId = adminService.ServiceId;
-                 currentService.UserId = adminService.UserId;
-                 currentService.ServiceDuration = adminService.ServiceDuration;
-                 currentService.ServicePrice = adminService.ServicePrice;
-                 _context.AdminServices.Update(currentService);
-                 await _context.SaveChangesAsync();
-                 return currentService;
-             }
-             else
-             {
-                 throw new KeyNotFoundException();
-             }*/
+            
             _context.AdminServices.Update(adminService);
             await _context.SaveChangesAsync();
             return adminService;
