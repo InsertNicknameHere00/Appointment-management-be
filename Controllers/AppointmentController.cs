@@ -52,9 +52,9 @@
         }
 
         [HttpPost("add/id")]
-        public async Task<IActionResult> Add([FromHeader] int userId)
+        public async Task<IActionResult> Add([FromHeader] int userId, int serviceId)
         {
-            var appointmentTemp = await this.appointmentService.CreateAsync(userId);
+            var appointmentTemp = await this.appointmentService.CreateAsync(userId, serviceId);
 
             return Ok(appointmentTemp);
         }

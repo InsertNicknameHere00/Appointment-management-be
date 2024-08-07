@@ -2,6 +2,7 @@ using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
 using AppointmentAPI.Repositories;
 using AppointmentAPI.Repositories.Interfaces;
+using AppointmentAPI.Repository;
 using AppointmentAPI.Services;
 using AppointmentAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
@@ -39,8 +40,6 @@ builder.Services.AddScoped<IUsersServices ,UsersServices>();
 builder.Services.AddScoped<IUsersServiceRepository, UsersServiceRepository>();
 builder.Services.AddScoped(typeof(IUsersServices), (typeof(UsersServices)));
 builder.Services.AddScoped(typeof(IUsersServiceRepository), (typeof(UsersServiceRepository)));
-
-builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 

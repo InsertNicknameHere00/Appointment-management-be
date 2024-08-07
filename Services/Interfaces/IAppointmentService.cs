@@ -7,7 +7,7 @@
     {
         Task<IEnumerable<Appointment>> GetAll();
 
-        Task<Appointment> CreateAsync(int userId);
+        Task<Appointment> CreateAsync(int userId, int serviceId);
 
         Task<int> EditAsync(int id, int userId, string status);
 

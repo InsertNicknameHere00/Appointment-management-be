@@ -6,11 +6,6 @@
 
     public class Appointment
     {
-        public Appointment()
-        {
-
-        }
-
         [Key]
         public int Id { get; set; }
 
@@ -29,10 +24,9 @@
         [ForeignKey(nameof(UserId))]
         public virtual Users User { get; set; } = null!;
 
-        // todo: Map with serviceid
-        //[Required]
-        //public int ServiceId { get; set; }
+        [Required]
+        public int ServiceId { get; set; }
 
-        //public virtual Service Service { get; set; } = null!;
+        public virtual SalonService Service { get; set; } = null!;
     }
 }

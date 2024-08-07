@@ -24,7 +24,7 @@
         }
 
 
-        public async Task<Appointment> CreateAsync(int userId)
+        public async Task<Appointment> CreateAsync(int userId, int serviceId)
         {
             Appointment appointment = new Appointment() 
             { 
@@ -33,6 +33,7 @@
                 // TODO: get duration from service and add it to endDate
                 EndDate = DateTime.Now.AddMinutes(30),
                 UserId = userId,
+                ServiceId = serviceId
             };
 
             var result = await this.repository.Add(appointment);
