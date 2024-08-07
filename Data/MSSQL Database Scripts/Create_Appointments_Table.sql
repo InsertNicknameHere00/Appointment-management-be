@@ -2,9 +2,10 @@ USE haircutSalonDB;
 GO
 
 CREATE TABLE Appointments(
-appointmentID int IDENTITY(1,1) PRIMARY KEY NOT NULL,
-appointmentStatus int NOT NULL,
-appointmentStartDate DateTime2,
-appointmentEndDate DateTime2,
-userID int FOREIGN KEY REFERENCES Users(UserID) not null
+Id int IDENTITY(1,1) PRIMARY KEY NOT NULL,
+Status int NOT NULL,
+StartDate DateTime2,
+EndDate DateTime2,
+userId int FOREIGN KEY REFERENCES Users(UserID) not null,
+serviceId int FOREIGN KEY REFERENCES SalonService(serviceID) not null
 );	
