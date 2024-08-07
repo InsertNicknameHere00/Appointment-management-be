@@ -6,16 +6,18 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AppointmentAPI.Entities;
 using AppointmentAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppointmentAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(Roles = "Admin")]
     public class UsersController : ControllerBase
     {
-        private readonly UsersService _usersService;
+        private readonly IUsersServices _usersService;
 
-        public UsersController(UsersService usersService)
+        public UsersController(IUsersServices usersService)
         {
             _usersService = usersService;
         }
@@ -23,31 +25,38 @@ namespace AppointmentAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            var userTemp = await _usersService.GetUsersQuery();
+            var userTemp = await _usersService.GetAllUsers();
             return Ok(userTemp);
         }
 
         [HttpGet("userId")]
         public async Task<IActionResult> GetUserID([FromHeader] int userId) {
-            var userTemp = await _usersService.GetUsersIDQuery(userId);
+            var userTemp = await _usersService.GetUsersByID(userId);
             return Ok(userTemp);
         }
 
         [HttpPost("userId")]
-        public async Task<IActionResult> PostUsersID([FromBody] Users users) {
-            var userTemp = await _usersService.PostUsersIDQuery(users);
+        public async Task<IActionResult> AddUser([FromBody] Users users) {
+            var userTemp = await _usersService.AddUsers(users);
             return Ok(userTemp);
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] Users users) {
-            var userTemp = await _usersService.RegistrationQuery(users);
+            var userTemp = await _usersService.RegisterUsers(users);
             return Ok(userTemp);
         }
 
         [HttpDelete("id")]
         public async Task<IActionResult> DeleteUserID([FromHeader] int id) {
-            var userTemp = await _usersService.DeleteUsersQuery(id);
+            var userTemp = await _usersService.DeleteUsers(id);
+            return Ok(userTemp);
+        }
+
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateUsersByID([FromHeader] int userId, [FromBody] Users users)
+        {
+            var userTemp = await _usersService.UpdateUsersByID(userId, users);
             return Ok(userTemp);
         }
     }

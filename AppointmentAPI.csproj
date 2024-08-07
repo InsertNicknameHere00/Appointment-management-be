@@ -27,8 +27,4 @@
   <ItemGroup>
     <None Remove="Data\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Repository\" />
-  </ItemGroup>
 </Project>
