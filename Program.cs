@@ -11,6 +11,12 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole(options =>
+{
+   // options.IncludeScopes = true;
+    options.TimestampFormat = "HH:mm:ss ";
+});
 
 // Add services to the container.
 
@@ -27,8 +33,9 @@ builder.Services.AddScoped(typeof(ISalonServiceRepository), typeof(SalonServiceR
 builder.Services.AddScoped(typeof(IAdminServiceRepository), typeof(AdminServiceRepository));
 builder.Services.AddScoped<IAdminServices,AdminServices>();
 
-//builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
-//builder.Services.AddScoped<IReviewService, ReviewService>();
+
+builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 //JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
@@ -44,7 +51,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
-
+builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -53,6 +61,7 @@ builder.Services.AddScoped<IUsersServices ,UsersServices>();
 builder.Services.AddScoped<IUsersServiceRepository, UsersServiceRepository>();
 builder.Services.AddScoped(typeof(IUsersServices), (typeof(UsersServices)));
 builder.Services.AddScoped(typeof(IUsersServiceRepository), (typeof(UsersServiceRepository)));
+
 
 var app = builder.Build();  
 

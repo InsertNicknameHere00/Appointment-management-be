@@ -1,6 +1,9 @@
-create table Review(
-reviewID Integer primary key not null,
-userID Integer foreign key references Users(UserID) not null,
-serviceID Integer foreign key references AdminServices(id),
+USE haircutSalonDB;
+GO
+
+CREATE TABLE Review(
+reviewID int IDENTITY(1,1) primary key not null,
+userID int foreign key references Users(UserID) not null,
+serviceID int foreign key references AdminServices(adminServicesID),
 reviewDescription varchar(255)
-)
+);
