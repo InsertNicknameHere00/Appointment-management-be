@@ -109,9 +109,10 @@ namespace AppointmentAPI.Controllers
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.PreferredUsername, usersInfo.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, usersInfo.Email),
-                new Claim(JwtRegisteredClaimNames.AtHash, usersInfo.PasswordHash)
+        new Claim(JwtRegisteredClaimNames.Sub, usersInfo.RoleID?.ToString() ?? string.Empty),
+        new Claim(JwtRegisteredClaimNames.NameId, usersInfo.UserID?.ToString() ?? string.Empty),
+        new Claim(JwtRegisteredClaimNames.PreferredUsername, usersInfo.UserName),
+        new Claim(JwtRegisteredClaimNames.Email, usersInfo.Email)
     };
 
             var token = new JwtSecurityToken(
@@ -123,6 +124,5 @@ namespace AppointmentAPI.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
     }
 }

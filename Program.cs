@@ -27,8 +27,8 @@ builder.Services.AddScoped(typeof(ISalonServiceRepository), typeof(SalonServiceR
 builder.Services.AddScoped(typeof(IAdminServiceRepository), typeof(AdminServiceRepository));
 builder.Services.AddScoped<IAdminServices,AdminServices>();
 
-builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
-builder.Services.AddScoped<IReviewService, ReviewService>();
+//builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
+//builder.Services.AddScoped<IReviewService, ReviewService>();
 
 //JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
