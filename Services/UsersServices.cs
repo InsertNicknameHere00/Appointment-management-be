@@ -4,16 +4,19 @@ using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
 using AppointmentAPI.Repository;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppointmentAPI.Services
 {
     public class UsersServices : IUsersServices
     {
         private readonly IUsersServiceRepository _repository;
+        private readonly HaircutSalonDbContext _context;
 
-        public UsersServices(IUsersServiceRepository repository)
+        public UsersServices(IUsersServiceRepository repository, HaircutSalonDbContext context)
         {
             _repository = repository;
+            _context = context;
         }
 
         public async Task<List<Users>> GetAllUsers()
@@ -53,6 +56,12 @@ namespace AppointmentAPI.Services
         public async Task<bool> RegisterUsers(Users users) {
             bool usersTemp= await _repository.RegisterUsers(users);
             return usersTemp;
+        }
+
+
+        public async Task<Users> GetUsersByEmail(string email)
+        {
+            return await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
         }
     }
 
