@@ -52,7 +52,8 @@
 
         public async Task<Appointment> GetById(int id)
         {
-            return await this.dbContext.Appointments.FirstAsync(a => a.Id == id);
+            return await this.dbContext.Appointments
+                                    .FirstAsync(a => a.Id == id);
         }
 
         public async Task<bool> IsUserOwner(int id, int userId)

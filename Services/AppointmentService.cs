@@ -5,6 +5,7 @@
     using AppointmentAPI.Entities.Enums;
     using AppointmentAPI.Repositories.Interfaces;
     using AppointmentAPI.Services.Interfaces;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -20,13 +21,21 @@
 
         public async Task<IEnumerable<Appointment>> GetAll()
         {
-            return await repository.GetAll();
+            var result = await repository.GetAll();
+            if (result.Any()) 
+            { 
+                return result;
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
         }
 
 
         public async Task<Appointment> CreateAsync(int userId, int serviceId)
         {
-            Appointment appointment = new Appointment() 
+            var appointment = new Appointment() 
             { 
                 Status = StatusType.Available,
                 StartDate = DateTime.Now,
@@ -37,30 +46,55 @@
             };
 
             var result = await this.repository.Add(appointment);
-
-            return result;
+            if (result != null)
+            {
+                return result;
+            } 
+            else 
+            {
+                throw new KeyNotFoundException();
+            }
         }
 
         public async Task DeleteAsync(int id)
         {
-            Appointment appointment = await this.GetById(id);
+            var appointment = await this.GetById(id);
+            if (appointment != null)
+            {
+                await this.repository.Delete(appointment);
+            }
+            else 
+            {
+                throw new KeyNotFoundException();
+            }
 
-            await this.repository.Delete(appointment);
         }
 
-        public async Task<int> EditAsync(int id, int userId, string status)
+        public async Task<Appointment> EditAsync(int id, int userId, string status)
         {
-            Appointment appointment = await this.GetById(id);
-            Enum.TryParse(typeof(StatusType), status.ToString(), out object? statusResult);
+            var appointment = await this.GetById(id);
+            if (appointment != null)
+            {
+                Enum.TryParse(typeof(StatusType), status.ToString(), out object? statusResult);
+                if (statusResult == null) 
+                {
+                    throw new DbUpdateException();
+                }
 
-            appointment.StartDate = DateTime.Now;
-            appointment.EndDate = DateTime.Now.AddMinutes(30);
-            appointment.Status = (StatusType)statusResult!;
-            appointment.UserId = userId;
+                appointment.StartDate = DateTime.Now;
+                appointment.EndDate = DateTime.Now.AddMinutes(30);
+                appointment.Status = (StatusType)statusResult!;
+                appointment.UserId = userId;
 
-            await this.repository.Update(appointment);
+                await this.repository.Update(appointment);
 
-            return appointment.Id;
+                return appointment;
+            }
+            else 
+            {
+                throw new KeyNotFoundException();
+            }
+            
         }
 
         public async Task<bool> ExistsByIdAsync(int id)
@@ -69,7 +103,17 @@
         }
 
         public async Task<Appointment> GetById(int id)
-            => await this.repository.GetById(id);
+        {
+            var result = await this.repository.GetById(id);
+            if (result != null)
+            {
+                return result;
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
+        }
 
         public async Task<bool> IsUserOwner(int id, int userId)
         {
