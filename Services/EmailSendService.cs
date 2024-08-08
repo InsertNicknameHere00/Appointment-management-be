@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 
 
-namespace AppointmentAPI.Repository
+namespace AppointmentAPI.Services
 {
     public class EmailSendService : IEmailSendService
     {
