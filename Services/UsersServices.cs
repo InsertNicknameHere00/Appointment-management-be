@@ -73,14 +73,10 @@ namespace AppointmentAPI.Services
         public async Task<Users> AuthenticateUser(LoginUsers login)
         {
             var user = await _context.Users
-                .SingleOrDefaultAsync(u => u.Email == login.Email && u.PasswordHash == login.PasswordHash);
+               .Include(u => u.Role) // Include Role information
+               .SingleOrDefaultAsync(u => u.Email == login.Email && u.PasswordHash == login.PasswordHash);
 
-            if (user != null)
-            {
-                return user;
-            }
-
-            return null;
+            return user;
         }
 
         public string GenerateJSONWebToken(Users userInfo)
@@ -90,11 +86,11 @@ namespace AppointmentAPI.Services
 
             var claims = new[]
             {
-                //new Claim(JwtRegisteredClaimNames.Sub, userInfo.RoleID?.ToString() ?? string.Empty),
-                new Claim(ClaimTypes.Role, userInfo.RoleID?.ToString()?? string.Empty),
+                new Claim(ClaimTypes.Role, userInfo.Role.RoleName),
                 new Claim(JwtRegisteredClaimNames.NameId, userInfo.UserID?.ToString() ?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.PreferredUsername, userInfo.UserName),
                 new Claim(JwtRegisteredClaimNames.Email, userInfo.Email)
+
             };
 
             var token = new JwtSecurityToken(

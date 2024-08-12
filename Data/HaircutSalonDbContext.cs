@@ -15,6 +15,7 @@ namespace AppointmentAPI.Data
         public HaircutSalonDbContext(DbContextOptions<HaircutSalonDbContext> options) : base(options)
         {
         }
+        public DbSet<Role> Roles { get; set; }
     }
 }
 
