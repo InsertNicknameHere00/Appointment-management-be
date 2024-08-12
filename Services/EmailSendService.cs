@@ -4,8 +4,6 @@ using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
 
-
-
 namespace AppointmentAPI.Services
 {
     public class EmailSendService : IEmailSendService
