@@ -1,10 +1,5 @@
 ﻿using AppointmentAPI.Entities;
-using MailKit;
-//using MailKit.Net.Smtp;
-using MailKit.Security;
 using Microsoft.Extensions.Options;
-using MimeKit;
-using Org.BouncyCastle.Utilities.Net;
 using System.Net;
 using System.Net.Mail;
 
@@ -15,7 +10,7 @@ namespace AppointmentAPI.Services
     {
         private readonly EmailSettings _mailSettings;
 
-        public EmailSendService(IOptions<EmailSettings> mailSettings)
+        public EmailSendService(IOptions<EmailSettings> mailSettings) 
         {
             _mailSettings = mailSettings.Value;
         }
