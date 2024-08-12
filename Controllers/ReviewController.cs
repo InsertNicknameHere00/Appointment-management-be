@@ -107,11 +107,20 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPost]
-       // [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<Review>> AddReview([FromBody] Review _review)
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized(new { message = "User ID not found in the token." });
+                }
+
+                _review.UserId = int.Parse(userId);
+
+
                 var review = await reviewService.Save(_review);
                 logger.LogInformation("Review is successfully created");
                 return Ok(review);
@@ -129,7 +138,7 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult> UpdateReview([FromHeader]int id, [FromBody] Review _review)
         {
             try
@@ -151,7 +160,7 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> DeleteReview([FromHeader]int id)
         {
             try
