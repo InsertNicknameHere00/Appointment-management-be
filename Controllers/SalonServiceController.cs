@@ -1,6 +1,7 @@
 ﻿using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
 using AppointmentAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -41,15 +42,11 @@ namespace AppointmentAPI.Controllers
                 logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
-            //var services = await salonService.GetAllSalonServices();
-            //return Ok(services);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<SalonService>> GetServiceById([FromHeader] int id)
         {
-            //var service = await salonService.GetSalonServiceById(id);
-            //return Ok(service);
             try
             {
                 var services = await salonService.GetSalonServiceById(id);
@@ -70,11 +67,9 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> UpdateSalonService([FromHeader] int id, [FromBody] SalonService _service)
         {
-            //try-catch
-            //var service = await salonService.Update(id, _service);
-            //return Ok(service);
             try
             {
                 var services = await salonService.Update(id, _service);
@@ -94,6 +89,7 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "1")]
         public async Task<ActionResult<SalonService>> AddSalonService([FromBody] SalonService _service)
         {
             try
@@ -112,11 +108,10 @@ namespace AppointmentAPI.Controllers
                 logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
-            //var service = await salonService.Save(_service);
-            //return Ok(service);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> DeleteSalonService([FromHeader] int id)
         {
             try
@@ -135,8 +130,6 @@ namespace AppointmentAPI.Controllers
                 logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
-            // var service = await salonService.Delete(id);
-            //return Ok(service);
         }
 
 
