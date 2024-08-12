@@ -2,6 +2,7 @@
 using AppointmentAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using System.Security.Claims;
 
 namespace AppointmentAPI.Controllers
@@ -11,71 +12,166 @@ namespace AppointmentAPI.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly IReviewService reviewService;
+        private readonly ILogger<ReviewController> logger;
 
-        public ReviewController(IReviewService _reviewService)
+        public ReviewController(IReviewService _reviewService, ILogger<ReviewController> logger)
         {
             reviewService = _reviewService;
+            this.logger = logger;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Review>>> GetAllReviews()
         {
-            var reviews = await reviewService.GetAllReviews();
-            return Ok(reviews);
+            try
+            {
+                var reviews = await reviewService.GetAllReviews();
+                logger.LogInformation("Reviews are successfully loaded");
+                return Ok(reviews);
+            }
+            catch(KeyNotFoundException ex)
+            {
+                logger.LogInformation("Reviews does not exist");
+                return NotFound(new {message = ex.Message});
+            }
+            catch (Exception ex) 
+            { 
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "We are currently unable to process your request!" });
+            }
+            
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Review>> GetReviewById([FromHeader]int id)
         {
-            var review = await reviewService.GetReviewById(id);
-            if (review == null)
+            try
             {
-                return NotFound();
+                var review = await reviewService.GetReviewById(id);
+                logger.LogInformation("Review is successfully loaded");
+                return Ok(review);
             }
-            return Ok(review);
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogInformation("Review with this id does not exist");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "We are currently unable to process your request!" });
+            }
+
         }
 
         [HttpGet("service/{serviceId}")]
         public async Task<ActionResult<IEnumerable<Review>>> GetReviewsByServiceId([FromHeader]int serviceId)
         {
-            var reviews = await reviewService.GetReviewByServiceId(serviceId);
-            return Ok(reviews);
+            try
+            {
+                var reviews = await reviewService.GetReviewByServiceId(serviceId);
+                logger.LogInformation("Reviews are successfully loaded");
+                return Ok(reviews);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogInformation("Reviews for this service does not exist");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "We are currently unable to process your request!" });
+            }
         }
 
         [HttpGet("user/{userId}")]
         public async Task<ActionResult<IEnumerable<Review>>> GetReviewsByUserId([FromHeader] int userId)
         {
-            var reviews = await reviewService.GetReviewByUserId(userId);
-            return Ok(reviews);
+            try
+            {
+                var reviews = await reviewService.GetReviewByUserId(userId);
+                logger.LogInformation("Reviews are successfully loaded");
+                return Ok(reviews);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogInformation("Reviews by this user does not exist");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "We are currently unable to process your request!" });
+            }
         }
 
         [HttpPost]
        // [Authorize]
         public async Task<ActionResult<Review>> AddReview([FromBody] Review _review)
         {
-            var review = await reviewService.Save(_review);
-            return Ok(review);
+            try
+            {
+                var review = await reviewService.Save(_review);
+                logger.LogInformation("Review is successfully created");
+                return Ok(review);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogInformation("Review is not created successfully");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "We are currently unable to process your request!" });
+            }
         }
 
         [HttpPut("{id}")]
         //[Authorize]
         public async Task<ActionResult> UpdateReview([FromHeader]int id, [FromBody] Review _review)
         {
-            var review = await reviewService.Update(id, _review);
-            return Ok(review);
+            try
+            {
+                var review = await reviewService.Update(id, _review);
+                logger.LogInformation("The review is successfully updated");
+                return Ok(review);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogInformation("Review is not found");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "We are currently unable to process your request!" });
+            }
         }
 
         [HttpDelete("{id}")]
         //[Authorize]
-        public async Task<bool> DeleteReview([FromHeader]int id)
+        public async Task<IActionResult> DeleteReview([FromHeader]int id)
         {
-            var deleted = await reviewService.Delete(id);
-            if (!deleted)
+            try
             {
-                return false;
+                var reviews = await reviewService.Delete(id);
+                logger.LogInformation("Review is deleted successfully");
+                return Ok(reviews);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogInformation("Review is not found");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "We are currently unable to process your request!" });
             }
 
-            return true;
+
         }
 
 
