@@ -1,10 +1,9 @@
 ﻿using AppointmentAPI.Entities;
-using MailKit;
-using MailKit.Net.Smtp;
-using MailKit.Security;
+
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
+
 
 
 namespace AppointmentAPI.Services
@@ -17,6 +16,7 @@ namespace AppointmentAPI.Services
         {
             _mailSettings = mailSettings.Value;
         }
+
         public async Task SendEmail(EmailRequest mailRequest)
         {
             _mailSettings.EmailAddress = "appointmentapi0@gmail.com";
