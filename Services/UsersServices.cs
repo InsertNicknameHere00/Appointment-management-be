@@ -90,7 +90,8 @@ namespace AppointmentAPI.Services
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.RoleID?.ToString() ?? string.Empty),
+                //new Claim(JwtRegisteredClaimNames.Sub, userInfo.RoleID?.ToString() ?? string.Empty),
+                new Claim(ClaimTypes.Role, userInfo.RoleID?.ToString()?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.NameId, userInfo.UserID?.ToString() ?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.PreferredUsername, userInfo.UserName),
                 new Claim(JwtRegisteredClaimNames.Email, userInfo.Email)

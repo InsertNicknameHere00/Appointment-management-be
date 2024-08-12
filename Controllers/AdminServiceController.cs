@@ -9,7 +9,6 @@ namespace AppointmentAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles ="Admin")]
     public class AdminServiceController : ControllerBase
     {
         private readonly IAdminServices adminService;
@@ -40,8 +39,6 @@ namespace AppointmentAPI.Controllers
                 logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
-            //var services = await adminService.GetAllAdminServices();
-            //return Ok(services);
         }
 
         [HttpGet("{id}")]
@@ -63,13 +60,11 @@ namespace AppointmentAPI.Controllers
                 logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
-            //var service = await adminService.GetAdminServicesById(id);
-            //return Ok(service);
 
         }
 
-        //[Authorize(Roles ="Administrator")]
         [HttpPut("{id}")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> UpdateAdminService([FromHeader] int id, [FromBody] AdminService _service)
         {
             try
@@ -88,12 +83,11 @@ namespace AppointmentAPI.Controllers
                 logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
-            //var service = await adminService.Update(id, _service);
-            //return Ok(service);
         }
 
 
         [HttpPost]
+        [Authorize(Roles = "1")]
         public async Task<ActionResult<AdminService>> AddAdminService([FromBody] AdminService _service)
         {
             try
@@ -112,11 +106,10 @@ namespace AppointmentAPI.Controllers
                 logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
-            // var service = await adminService.Save(_service);
-            //return Ok(service);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> DeleteAdminService([FromHeader] int id)
         {
             try
@@ -135,8 +128,6 @@ namespace AppointmentAPI.Controllers
                 logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
-            //var service = await adminService.Delete(id);
-            //return Ok(service);
         }
 
         [HttpGet("user/{id}")]
@@ -179,8 +170,6 @@ namespace AppointmentAPI.Controllers
                 logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
-            //var services = await adminService.GetAllAdminServices();
-            //return Ok(services);
         }
 
 
