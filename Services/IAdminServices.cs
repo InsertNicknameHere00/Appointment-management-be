@@ -10,7 +10,7 @@ namespace AppointmentAPI.Services
         Task<List<AdminService>> GetAdminServiceByAdminId(int id);
         Task<AdminService> Save(AdminService adminService);
 
-        Task<AdminService> Update(int id,AdminService adminService);
+        Task<AdminService> Update(int id, AdminService adminService);
         Task<bool> Delete(int id);
     }
 }

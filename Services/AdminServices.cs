@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace AppointmentAPI.Services
 {
-    public class AdminServices:IAdminServices
+    public class AdminServices : IAdminServices
     {
         private readonly IAdminServiceRepository _repository;
         public AdminServices(IAdminServiceRepository adminServiceRepository)
@@ -15,39 +15,118 @@ namespace AppointmentAPI.Services
 
         public async Task<bool> Delete(int id)
         {
-            return await _repository.DeleteAdminService(id);
+            var result = _repository.Search(id);
+            if (result != null)
+            {
+                await _repository.DeleteAdminService(result);
+                return true;
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
+            //return await _repository.DeleteAdminService(id);
 
         }
 
         public async Task<List<AdminService>> GetAllAdminServices()
         {
-            return await _repository.GetAllAdminServices();
+            var result = await _repository.GetAllAdminServices();
+            if (result.Count != 0)
+            {
+                return result;
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
+            //return await _repository.GetAllAdminServices();
         }
 
         public async Task<List<AdminService>> GetAdminServiceByAdminId(int id)
         {
-            return await _repository.GetAdminServiceByAdminId(id);
+            var result = await _repository.GetAdminServiceByAdminId(id);
+            if (result.Count != 0)
+            {
+                return result;
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
+            //return await _repository.GetAdminServiceByAdminId(id);
         }
 
         public async Task<AdminService> GetAdminServicesById(int id)
         {
-            return await _repository.GetAdminServiceById(id);
+            var result = await _repository.GetAdminServiceById(id);
+            if (result != null)
+            {
+                return result;
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
+            //return await _repository.GetAdminServiceById(id);
         }
 
         public async Task<List<AdminService>> GetAdminServiceByServiceId(int id)
         {
-            return await _repository.GetAdminServiceByServiceId(id);
+            var result = await _repository.GetAllAdminServices();
+            if (result.Count != 0)
+            {
+                return result;
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
+            //return await _repository.GetAdminServiceByServiceId(id);
         }
 
         public async Task<AdminService> Save(AdminService adminService)
         {
-            return await _repository.AddAdminService(adminService);
+            if (adminService != null)
+            {
+                var result = new AdminService();
+                result.Id = adminService.Id;
+                result.ServiceId = adminService.ServiceId;
+                result.UserId = adminService.UserId;
+                result.ServiceDuration = adminService.ServiceDuration;
+                result.ServicePrice = adminService.ServicePrice;
+                await _repository.AddAdminService(result);
+                return result;
+
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
+            //return await _repository.AddAdminService(adminService);
 
         }
 
         public async Task<AdminService> Update(int serviceId, AdminService adminService)
         {
-            return await _repository.UpdateAdminService(serviceId, adminService);
+            var result = await _repository.GetAdminServiceById(serviceId);
+            if (result != null)
+            {
+                result.Id = serviceId;
+                result.ServiceId = adminService.ServiceId;
+                result.UserId = adminService.UserId;
+                result.ServiceDuration = adminService.ServiceDuration;
+                result.ServicePrice = adminService.ServicePrice;
+                await _repository.UpdateAdminService(serviceId, result);
+
+                return result;
+
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
+            //return await _repository.UpdateAdminService(serviceId, adminService);
         }
 
     }

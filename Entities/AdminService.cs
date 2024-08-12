@@ -20,6 +20,6 @@ namespace AppointmentAPI.Entities
         public decimal ServicePrice { get; set; }
 
         //public virtual Users User {get;set;}
-        //public virtual SalonService SalonService {get;set;}
+        // public virtual SalonService SalonService { get; set; }
     }
 }
