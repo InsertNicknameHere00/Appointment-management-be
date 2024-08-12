@@ -76,53 +76,16 @@ namespace AppointmentAPI.Controllers
             }
 
             // Authenticate user
-            var user = await AuthenticateUser(login);
+            var user = await _usersService.AuthenticateUser(login);
 
             if (user != null)
             {
                 // Generate JWT token
-                var tokenString = GenerateJSONWebToken(user);
+                var tokenString = _usersService.GenerateJSONWebToken(user);
                 return Ok(new { token = tokenString });
             }
 
             return Unauthorized();
-        }
-
-
-
-        private async Task<Users> AuthenticateUser(LoginUsers login)
-        {
-            var user = await _usersService.GetUsersByEmail(login.Email);
-
-            if (user != null && user.PasswordHash == login.PasswordHash)
-            {
-                return user;
-            }
-
-            return null;
-        }
-
-        private string GenerateJSONWebToken(Users usersInfo)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-        new Claim(JwtRegisteredClaimNames.Sub, usersInfo.RoleID?.ToString() ?? string.Empty),
-        new Claim(JwtRegisteredClaimNames.NameId, usersInfo.UserID?.ToString() ?? string.Empty),
-        new Claim(JwtRegisteredClaimNames.PreferredUsername, usersInfo.UserName),
-        new Claim(JwtRegisteredClaimNames.Email, usersInfo.Email)
-    };
-
-            var token = new JwtSecurityToken(
-                _configuration["Jwt:Issuer"],
-                _configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(10),
-                signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
