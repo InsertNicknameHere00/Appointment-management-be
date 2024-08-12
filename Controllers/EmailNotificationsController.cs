@@ -1,5 +1,5 @@
 ﻿using AppointmentAPI.Entities;
-using AppointmentAPI.Repository;
+using AppointmentAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +22,7 @@ namespace AppointmentAPI.Controllers
         {
             try
             {
-                await _mailService.SendEmailAsync(request);
+                await _mailService.SendEmail(request);
                 _logger.LogInformation("Successful request");
                 return Ok();
             }

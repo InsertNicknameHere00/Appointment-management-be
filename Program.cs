@@ -27,7 +27,6 @@ builder.Services.AddControllers();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HaircutSalonDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<IEmailSendService, EmailSendService>();
 
 builder.Services.AddScoped<ISalonServices, SalonServices>();

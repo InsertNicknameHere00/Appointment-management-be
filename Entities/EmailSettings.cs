@@ -4,8 +4,7 @@
     {
         public string EmailAddress { get; set; }
 
-        public string DisplayName { get; set; }
-
+        public string SenderName { get; set; }
         public string Password { get; set; }
         public string Host {  get; set; }
 
