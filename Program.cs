@@ -30,7 +30,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<HaircutSalonDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddTransient<IEmailSendService, EmailSendService>();
-
 builder.Services.AddScoped<ISalonServices, SalonServices>();
 builder.Services.AddScoped(typeof(ISalonServiceRepository), typeof(SalonServiceRepository));
 builder.Services.AddScoped(typeof(IAdminServiceRepository), typeof(AdminServiceRepository));
@@ -89,6 +88,7 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddScoped<IUsersServices, UsersServices>();
 builder.Services.AddScoped<IUsersServiceRepository, UsersServiceRepository>();
 builder.Services.AddScoped(typeof(IUsersServices), (typeof(UsersServices)));
