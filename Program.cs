@@ -23,7 +23,7 @@ builder.Services.AddDbContext<HaircutSalonDbContext>(options => options.UseSqlSe
 builder.Services.AddScoped<ISalonServices, SalonServices>();
 builder.Services.AddScoped(typeof(ISalonServiceRepository), typeof(SalonServiceRepository));
 builder.Services.AddScoped(typeof(IAdminServiceRepository), typeof(AdminServiceRepository));
-builder.Services.AddScoped<IAdminServices,AdminServices>();
+builder.Services.AddScoped<IAdminServices, AdminServices>();
 
 builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
 builder.Services.AddScoped<IReviewService, ReviewService>();
@@ -33,14 +33,14 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IUsersServices ,UsersServices>();
+builder.Services.AddScoped<IUsersServices, UsersServices>();
 builder.Services.AddScoped<IUsersServiceRepository, UsersServiceRepository>();
 builder.Services.AddScoped(typeof(IUsersServices), (typeof(UsersServices)));
 builder.Services.AddScoped(typeof(IUsersServiceRepository), (typeof(UsersServiceRepository)));
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
-var app = builder.Build();  
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
