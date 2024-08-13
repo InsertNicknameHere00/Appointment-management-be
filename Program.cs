@@ -43,6 +43,8 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped(typeof(IProductRepository), typeof(ProductRepository));
 builder.Services.AddScoped<IProductService, ProductService>();
 
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+
 //JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
     options.TokenValidationParameters = new TokenValidationParameters
