@@ -24,6 +24,8 @@
         [ForeignKey(nameof(UserId))]
         public virtual Users User { get; set; } = null!;
 
+        public int? ClientId { get; set; }
+
         [Required]
         public int ServiceId { get; set; }
 

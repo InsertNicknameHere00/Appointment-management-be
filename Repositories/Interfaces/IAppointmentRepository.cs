@@ -14,8 +14,16 @@
 
         Task Delete(Appointment appointment);
 
-        Task<bool> ExistsByIdAsync(int id);
+        Task<bool> ExistsById(int id);
 
         Task<bool> IsUserOwner(int id, int userId);
+
+        Task BookAnAppointment(int id, int clientId);
+
+        Task CancelAnAppointment(int id);
+
+        Task<bool> IsBookedAsync(int id);
+
+        Task<bool> IsBookedByUserWithId(int id, int clientId);
     }
 }

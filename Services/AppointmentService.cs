@@ -1,11 +1,9 @@
 ﻿namespace AppointmentAPI.Services
 {
-    using AppointmentAPI.Data;
     using AppointmentAPI.Entities;
     using AppointmentAPI.Entities.Enums;
     using AppointmentAPI.Repositories.Interfaces;
     using AppointmentAPI.Services.Interfaces;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -99,7 +97,7 @@
 
         public async Task<bool> ExistsByIdAsync(int id)
         {
-            return await this.repository.ExistsByIdAsync(id);
+            return await this.repository.ExistsById(id);
         }
 
         public async Task<Appointment> GetById(int id)
@@ -118,6 +116,40 @@
         public async Task<bool> IsUserOwner(int id, int userId)
         {
             return await this.repository.IsUserOwner(id, userId);
+        }
+
+        public async Task BookAnAppointment(int id, int clientId)
+        {
+            var appointment = await this.GetById(id);
+            if (appointment == null)
+            {
+                throw new KeyNotFoundException();
+            }
+           
+            var isAppointmentBooked = await this.repository.IsBookedAsync(id);
+            if (isAppointmentBooked) 
+            {
+                throw new Exception("Appointment is already booked");
+            }
+
+            await this.repository.BookAnAppointment(id, clientId);
+        }
+
+        public async Task CancelAnAppointment(int id, int clientId)
+        {
+            var appointment = await this.GetById(id);
+            if (appointment == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
+            var isAppointmentBookedByClient = await this.repository.IsBookedByUserWithId(id, clientId);
+            if (!isAppointmentBookedByClient)
+            {
+                throw new Exception("Appointment is already booked by another client");
+            }
+
+            await this.repository.CancelAnAppointment(id);
         }
     }
 }

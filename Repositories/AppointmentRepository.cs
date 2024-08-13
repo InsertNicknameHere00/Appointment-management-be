@@ -37,7 +37,7 @@
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task<bool> ExistsByIdAsync(int id)
+        public async Task<bool> ExistsById(int id)
         {
             bool result = await this.dbContext.Appointments
                                      .AnyAsync(a => a.Id == id);
@@ -62,6 +62,36 @@
                                                     .FirstAsync(a => a.Id == id);
 
             return tempAppointment.UserId == userId;
+        }
+
+        public async Task BookAnAppointment(int id, int clientId)
+        {
+            Appointment tempAppointment = await this.GetById(id);
+            tempAppointment.ClientId = clientId;
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsBookedAsync(int id)
+        {
+            Appointment tempAppointment = await this.GetById(id);
+
+            return tempAppointment.ClientId.HasValue;
+        }
+
+        public async Task<bool> IsBookedByUserWithId(int id, int clientId)
+        {
+            Appointment tempAppointment = await this.GetById(id);
+
+            return tempAppointment.ClientId.HasValue && tempAppointment.ClientId == clientId;
+        }
+
+        public async Task CancelAnAppointment(int id)
+        {
+            Appointment tempAppointment = await this.GetById(id);
+            tempAppointment.ClientId = null;
+
+            await this.dbContext.SaveChangesAsync();
         }
     }
 }

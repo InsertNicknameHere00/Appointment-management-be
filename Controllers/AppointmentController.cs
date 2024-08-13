@@ -3,6 +3,7 @@
     using AppointmentAPI.Entities;
     using AppointmentAPI.Services;
     using AppointmentAPI.Services.Interfaces;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,7 @@
         }
 
         [HttpGet("all")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -34,6 +36,7 @@
         }
 
         [HttpGet("id")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetById([FromHeader] int id)
         {
             try
@@ -101,6 +104,38 @@
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                   "Error retrieving data from the database");
+            }
+        }
+
+        [HttpPut("book/id")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Book([FromHeader] int id, int clientId)
+        {
+            try
+            {
+                await this.appointmentService.BookAnAppointment(id, clientId);
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status304NotModified, new { message = "Error while booking an appointment" });
+            }
+        }
+
+        [HttpPut("cancel/id")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Cancel([FromHeader] int id, int clientId)
+        {
+            try
+            {
+                await this.appointmentService.CancelAnAppointment(id, clientId);
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status304NotModified, new { message = "Error while canceling an appointment"});
             }
         }
     }
