@@ -1,32 +1,99 @@
 ﻿using AppointmentAPI.Entities;
+using AppointmentAPI.Repository;
+using NuGet.Protocol.Core.Types;
 
 namespace AppointmentAPI.Services
 {
     public class ProductService : IProductService
     {
-        public Task<bool> Delete(int id)
+        private readonly IProductRepository _repository;
+        public ProductService(IProductRepository productRepository)
         {
-            throw new NotImplementedException();
+            _repository = productRepository;
         }
 
-        public Task<List<Product>> GetAllProducts()
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            var result = _repository.Search(id);
+            if (result != null)
+            {
+                await _repository.DeleteProduct(result);
+                return true;
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
         }
 
-        public Task<Product> GetProductById(int id)
+        public async Task<List<Product>> GetAllProducts()
         {
-            throw new NotImplementedException();
+            var result = await _repository.GetAllProducts();
+            if (result.Count != 0)
+            {
+                return result;
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
         }
 
-        public Task<Product> Save(Product product)
+        public async Task<Product> GetProductById(int id)
         {
-            throw new NotImplementedException();
+            var result = await _repository.GetProductById(id);
+            if (result != null)
+            {
+                return result;
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
         }
 
-        public Task<Product> Update(int id, Product product)
+        public async Task<Product> Save(Product product)
         {
-            throw new NotImplementedException();
+            if (product != null)
+            {
+                var result = new Product();
+                result.ProductId = product.ProductId;
+                result.ProductName = product.ProductName;
+                result.ProductDescription = product.ProductDescription;
+                result.Price=product.Price;
+                result.Quantity=product.Quantity;
+                result.ProductImage = product.ProductImage;              
+                await _repository.AddProduct(result);
+
+                return result;
+
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
+        }
+
+        public async Task<Product> Update(int id, Product product)
+        {
+            var result = await _repository.GetProductById(id);
+            if (product != null)
+            {
+                result.ProductId = product.ProductId;
+                result.ProductName = product.ProductName;
+                result.ProductDescription = product.ProductDescription;
+                result.Price = product.Price;
+                result.Quantity = product.Quantity;
+                result.ProductImage = product.ProductImage;
+                await _repository.UpdateProduct(id,result);
+
+                return result;
+
+            }
+            else
+            {
+                throw new KeyNotFoundException();
+            }
         }
     }
 }

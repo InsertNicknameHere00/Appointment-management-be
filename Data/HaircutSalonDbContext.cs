@@ -16,6 +16,7 @@ namespace AppointmentAPI.Data
         {
         }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<Product> Products { get; set; }
     }
 }
 
