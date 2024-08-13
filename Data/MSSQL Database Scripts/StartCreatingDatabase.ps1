@@ -6,7 +6,7 @@ $MessageBoxTitle = “Create Haircut Salon Database”
 $ButtonType = 'YesNo'
 $MessageIcon = [System.Windows.MessageBoxImage]::Question
 
-$CreateDatabaseFontMsgBoxBody = “Do you like to create new database?”
+$CreateDatabaseFontMsgBoxBody = “Do you want to create new database?”
 $CreateDatabaseFontMsgBox=[System.Windows.MessageBox]::Show($CreateDatabaseFontMsgBoxBody,$MessageboxTitle,$ButtonType,$Messageicon)
 
 switch  ($CreateDatabaseFontMsgBox) {
