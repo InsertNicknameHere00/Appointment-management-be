@@ -35,13 +35,13 @@ namespace AppointmentAPI.Controllers
             return Ok(userTemp);
         }
 
-        [HttpGet("userId")]
+        [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserID([FromHeader] int userId) {
             var userTemp = await _usersService.GetUsersByID(userId);
             return Ok(userTemp);
         }
 
-        [HttpPost("userId")]
+        [HttpPost("Admin/Add")]
         public async Task<IActionResult> AddUser([FromBody] Users users) {
             var userTemp = await _usersService.AddUsers(users);
             return Ok(userTemp);
@@ -53,16 +53,30 @@ namespace AppointmentAPI.Controllers
             return Ok(userTemp);
         }
 
-        [HttpDelete("id")]
-        public async Task<IActionResult> DeleteUserID([FromHeader] int id) {
-            var userTemp = await _usersService.DeleteUsers(id);
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeleteUserID([FromHeader] int userId) {
+            var userTemp = await _usersService.DeleteUsers(userId);
             return Ok(userTemp);
         }
 
-        [HttpPost("update")]
-        public async Task<IActionResult> UpdateUsersByID([FromHeader] int userId, [FromBody] Users users)
+        [HttpPost("Admin/Update/{userId}")]
+        public async Task<IActionResult> UpdateAdminByID([FromHeader] int userId, [FromBody] Users users)
         {
-            var userTemp = await _usersService.UpdateUsersByID(userId, users);
+            var userTemp = await _usersService.UpdateAdminByID(userId, users);
+            return Ok(userTemp);
+        }
+
+        [HttpPost("Update/{userId}")]
+        public async Task<IActionResult> UpdateUser([FromHeader]int userId, [FromBody] Users users)
+        {
+            var userTemp = await _usersService.UpdateUsers(userId,users);
+            return Ok(userTemp);
+        }
+
+        [HttpPost("ForgottenPassword")]
+        public async Task<IActionResult> ForgottenPassword([FromHeader] int userId, [FromBody] Users users)
+        {
+            var userTemp = await _usersService.ForgottenPassword(userId, users);
             return Ok(userTemp);
         }
 
