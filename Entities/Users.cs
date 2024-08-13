@@ -9,7 +9,10 @@
         public int? UserID { get; set; }
 
         [Required]
-        public string? UserName { get; set; }
+        public string? FirstName { get; set; }
+
+        [Required]
+        public string? LastName { get; set; }
 
         [Required]
         public string? Email { get; set; }
@@ -19,6 +22,12 @@
 
         [Required]
         public int? RoleID { get; set; }
+
+        [Required]
+        public string PhoneNumber {  get; set; }
+
+        //[Required]
+        //public Byte[] Image { get; set; }
 
     }
 }

@@ -28,8 +28,8 @@ namespace AppointmentAPI.Services
             return users;
         }
 
-        public async Task<Users> UpdateUsersByID(int id,Users users) {
-         return await _repository.UpdateUsersByID(id, users);
+        public async Task<Users> UpdateUsers(int id, Users users) {
+         return await _repository.UpdateUsers(id, users);
         }
 
         public async Task<Users> UpdateAdminByID(int id, Users users)
@@ -52,6 +52,12 @@ namespace AppointmentAPI.Services
                 return false;
             }
             return true;
+        }
+
+        public async Task<Users> ForgottenPassword(int id, Users users)
+        {
+            var usersTemp = await _repository.ForgottenPassword(id, users);
+            return usersTemp;
         }
 
 
