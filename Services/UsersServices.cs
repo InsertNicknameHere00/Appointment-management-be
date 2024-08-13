@@ -32,6 +32,11 @@ namespace AppointmentAPI.Services
          return await _repository.UpdateUsersByID(id, users);
         }
 
+        public async Task<Users> UpdateAdminByID(int id, Users users)
+        {
+            return await _repository.UpdateAdminByID(id, users);
+        }
+
         public async Task<Users> AddUsers(Users users)
         {
           return await _repository.AddUsers(users);

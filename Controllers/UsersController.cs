@@ -53,10 +53,10 @@ namespace AppointmentAPI.Controllers
             return Ok(userTemp);
         }
 
-        [HttpPost("update")]
-        public async Task<IActionResult> UpdateUsersByID([FromHeader] int userId, [FromBody] Users users)
+        [HttpPost("Admin / update")]
+        public async Task<IActionResult> UpdateAdminByID([FromHeader] int userId, [FromBody] Users users)
         {
-            var userTemp = await _usersService.UpdateUsersByID(userId, users);
+            var userTemp = await _usersService.UpdateAdminByID(userId, users);
             return Ok(userTemp);
         }
     }

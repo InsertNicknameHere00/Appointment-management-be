@@ -38,7 +38,7 @@ namespace AppointmentAPI.Repository
             return newUser;
         }
 
-        public async Task<Users> UpdateUsersByID(int id, Users users)
+        public async Task<Users> UpdateAdminByID(int id, Users users)
         {
             var existingUser = await _context.Users.FindAsync(id);
             if (existingUser != null)
@@ -48,6 +48,22 @@ namespace AppointmentAPI.Repository
                 existingUser.Email = users.Email;
                 existingUser.PasswordHash = users.PasswordHash;
                 existingUser.RoleID = users.RoleID;
+
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
+            return existingUser;
+        }
+
+        public async Task<Users> UpdateUsersByID(int id, Users users)
+        {
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser != null)
+            {
+                existingUser.UserID = id;
+                existingUser.UserName = users.UserName;
+                existingUser.Email = users.Email;
+                existingUser.PasswordHash = users.PasswordHash;
 
                 _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();

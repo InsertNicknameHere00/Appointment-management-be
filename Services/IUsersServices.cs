@@ -7,6 +7,7 @@ namespace AppointmentAPI.Services
         Task<Users> GetUsersByID(int id);
         Task<Users> AddUsers(Users users);
         Task<Users> UpdateUsersByID(int id, Users users);
+        Task<Users> UpdateAdminByID(int id, Users users);
         Task<bool> DeleteUsers(int id);
 
         Task<bool> RegisterUsers(Users users);
