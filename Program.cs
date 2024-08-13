@@ -29,7 +29,7 @@ builder.Services.AddControllers();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HaircutSalonDbContext>(options => options.UseSqlServer(connectionString));
 
-//builder.Services.AddTransient<IEmailSendService, EmailSendService>();
+builder.Services.AddTransient<IEmailSendService, EmailSendService>();
 
 builder.Services.AddScoped<ISalonServices, SalonServices>();
 builder.Services.AddScoped(typeof(ISalonServiceRepository), typeof(SalonServiceRepository));
@@ -95,6 +95,7 @@ builder.Services.AddScoped(typeof(IUsersServices), (typeof(UsersServices)));
 builder.Services.AddScoped(typeof(IUsersServiceRepository), (typeof(UsersServiceRepository)));
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+
 
 var app = builder.Build();
 

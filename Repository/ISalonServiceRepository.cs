@@ -7,7 +7,7 @@ namespace AppointmentAPI.Repository
         Task<List<SalonService>> GetAllSalonServices();
         Task<SalonService> GetSalonServicesById(int serviceId);
         Task<SalonService> AddSalonService(SalonService salonService);
-        Task<SalonService> UpdateSalonService(int serviceId,SalonService salonService);
+        Task<SalonService> UpdateSalonService(int serviceId, SalonService salonService);
         Task<bool> DeleteSalonService(SalonService service);
 
         SalonService Search(int id);
