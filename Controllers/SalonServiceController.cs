@@ -24,6 +24,7 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<SalonService>>> GetAll()
         {
             try
@@ -67,7 +68,7 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateSalonService([FromHeader] int id, [FromBody] SalonService _service)
         {
             try
@@ -89,7 +90,7 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<SalonService>> AddSalonService([FromBody] SalonService _service)
         {
             try
@@ -111,7 +112,7 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteSalonService([FromHeader] int id)
         {
             try
