@@ -2,6 +2,8 @@
 {
     using Microsoft.AspNetCore.Identity;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data;
 
     public class Users
     {
@@ -23,11 +25,8 @@
         [Required]
         public int? RoleID { get; set; }
 
-        [Required]
-        public string PhoneNumber {  get; set; }
-
-        //[Required]
-        //public Byte[] Image { get; set; }
+        [ForeignKey("RoleID")]
+        public virtual Role Role { get; set; }
 
     }
 }

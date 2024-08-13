@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using AppointmentAPI.Entities;
 using AppointmentAPI.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace AppointmentAPI.Controllers
 {
@@ -16,10 +20,12 @@ namespace AppointmentAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUsersServices _usersService;
+        private IConfiguration _configuration;
 
-        public UsersController(IUsersServices usersService)
+        public UsersController(IUsersServices usersService, IConfiguration configuration)
         {
             _usersService = usersService;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -72,6 +78,28 @@ namespace AppointmentAPI.Controllers
         {
             var userTemp = await _usersService.ForgottenPassword(userId, users);
             return Ok(userTemp);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginUsers login)
+        {
+            if (login == null || string.IsNullOrEmpty(login.Email) || string.IsNullOrEmpty(login.PasswordHash))
+            {
+                return BadRequest("Invalid login request");
+            }
+
+            // Authenticate user
+            var user = await _usersService.AuthenticateUser(login);
+
+            if (user != null)
+            {
+                // Generate JWT token
+                var tokenString = _usersService.GenerateJSONWebToken(user);
+                return Ok(new { token = tokenString });
+            }
+
+            return Unauthorized();
         }
     }
 }

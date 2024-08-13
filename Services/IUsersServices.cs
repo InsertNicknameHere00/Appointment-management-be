@@ -13,5 +13,8 @@ namespace AppointmentAPI.Services
 
         Task<bool> RegisterUsers(Users users);
 
+        Task<Users> AuthenticateUser(LoginUsers login);
+        Task<Users> GetUsersByEmail(string email);
+        string GenerateJSONWebToken(Users user);
     }
 }
