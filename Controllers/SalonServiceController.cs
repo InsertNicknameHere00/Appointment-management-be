@@ -24,7 +24,6 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<SalonService>>> GetAll()
         {
             try
