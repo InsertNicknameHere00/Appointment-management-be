@@ -2,11 +2,11 @@ Set-ExecutionPolicy "Unrestricted" -Force -Confirm:$false
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force -Confirm:$false
 Add-Type -AssemblyName PresentationFramework
 	
-$MessageBoxTitle = “Create Haircut Salon Database”
+$MessageBoxTitle = вЂњCreate Haircut Salon DatabaseвЂќ
 $ButtonType = 'YesNo'
 $MessageIcon = [System.Windows.MessageBoxImage]::Question
 
-$CreateDatabaseFontMsgBoxBody = “Желаете ли да създатете базата данни?”
+$CreateDatabaseFontMsgBoxBody = вЂњDo you like to create new database?вЂќ
 $CreateDatabaseFontMsgBox=[System.Windows.MessageBox]::Show($CreateDatabaseFontMsgBoxBody,$MessageboxTitle,$ButtonType,$Messageicon)
 
 switch  ($CreateDatabaseFontMsgBox) {
