@@ -1,10 +1,7 @@
 using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
-using AppointmentAPI.Repositories;
-using AppointmentAPI.Repositories.Interfaces;
 using AppointmentAPI.Repository;
 using AppointmentAPI.Services;
-using AppointmentAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

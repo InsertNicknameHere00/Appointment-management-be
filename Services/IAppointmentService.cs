@@ -1,4 +1,4 @@
-﻿namespace AppointmentAPI.Services.Interfaces
+﻿namespace AppointmentAPI.Services
 {
     using AppointmentAPI.Entities;
 

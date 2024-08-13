@@ -1,8 +1,7 @@
-﻿namespace AppointmentAPI.Repositories
+﻿namespace AppointmentAPI.Repository
 {
     using AppointmentAPI.Data;
     using AppointmentAPI.Entities;
-    using AppointmentAPI.Repositories.Interfaces;
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -18,28 +17,28 @@
 
         public async Task<Appointment> Add(Appointment appointment)
         {
-            var tempAppointment = await this.dbContext.Appointments.AddAsync(appointment);
+            var tempAppointment = await dbContext.Appointments.AddAsync(appointment);
 
-            await this.dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
 
             return tempAppointment.Entity;
         }
 
         public async Task Update(Appointment appointment)
         {
-            this.dbContext.Appointments.Update(appointment);
-            await this.dbContext.SaveChangesAsync();
+            dbContext.Appointments.Update(appointment);
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task Delete(Appointment appointment)
         {
-            this.dbContext.Appointments.Remove(appointment);
-            await this.dbContext.SaveChangesAsync();
+            dbContext.Appointments.Remove(appointment);
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<bool> ExistsById(int id)
         {
-            bool result = await this.dbContext.Appointments
+            bool result = await dbContext.Appointments
                                      .AnyAsync(a => a.Id == id);
 
             return result;
@@ -47,18 +46,18 @@
 
         public async Task<IEnumerable<Appointment>> GetAll()
         {
-            return await this.dbContext.Appointments.ToListAsync();
+            return await dbContext.Appointments.ToListAsync();
         }
 
         public async Task<Appointment> GetById(int id)
         {
-            return await this.dbContext.Appointments
+            return await dbContext.Appointments
                                     .FirstAsync(a => a.Id == id);
         }
 
         public async Task<bool> IsUserOwner(int id, int userId)
         {
-            Appointment tempAppointment = await this.dbContext.Appointments
+            Appointment tempAppointment = await dbContext.Appointments
                                                     .FirstAsync(a => a.Id == id);
 
             return tempAppointment.UserId == userId;
@@ -66,32 +65,32 @@
 
         public async Task BookAnAppointment(int id, int clientId)
         {
-            Appointment tempAppointment = await this.GetById(id);
+            Appointment tempAppointment = await GetById(id);
             tempAppointment.ClientId = clientId;
 
-            await this.dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<bool> IsBookedAsync(int id)
         {
-            Appointment tempAppointment = await this.GetById(id);
+            Appointment tempAppointment = await GetById(id);
 
             return tempAppointment.ClientId.HasValue;
         }
 
         public async Task<bool> IsBookedByUserWithId(int id, int clientId)
         {
-            Appointment tempAppointment = await this.GetById(id);
+            Appointment tempAppointment = await GetById(id);
 
             return tempAppointment.ClientId.HasValue && tempAppointment.ClientId == clientId;
         }
 
         public async Task CancelAnAppointment(int id)
         {
-            Appointment tempAppointment = await this.GetById(id);
+            Appointment tempAppointment = await GetById(id);
             tempAppointment.ClientId = null;
 
-            await this.dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
     }
 }

@@ -2,8 +2,7 @@
 {
     using AppointmentAPI.Entities;
     using AppointmentAPI.Entities.Enums;
-    using AppointmentAPI.Repositories.Interfaces;
-    using AppointmentAPI.Services.Interfaces;
+    using AppointmentAPI.Repository;
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;
