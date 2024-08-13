@@ -23,6 +23,9 @@
         public string? PasswordHash { get; set; }
 
         [Required]
+        public string PhoneNumber { get; set; }
+
+        [Required]
         public int? RoleID { get; set; }
 
         [ForeignKey("RoleID")]
