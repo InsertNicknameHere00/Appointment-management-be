@@ -8,11 +8,11 @@ namespace AppointmentAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ShoppingCartController : ControllerBase
     {
         private readonly IShoppingCartService shoppingCartService;
         private readonly ILogger<ShoppingCartController> logger;
-        //private readonly List<CartItem> cart = new List<CartItem>();
 
         public ShoppingCartController(IShoppingCartService shoppingCartService, ILogger<ShoppingCartController> logger)
         {
@@ -25,7 +25,8 @@ namespace AppointmentAPI.Controllers
         {
             try
             {
-                await shoppingCartService.AddProduct(cartItem.Product, cartItem.Quantity);
+                var userId = GetUserId();
+                await shoppingCartService.AddProduct(userId,cartItem.Product, cartItem.Quantity);
                 logger.LogInformation("Product is successfully added");
                 return Ok(cartItem);
             }
@@ -47,7 +48,8 @@ namespace AppointmentAPI.Controllers
         {
             try
             {
-                await shoppingCartService.RemoveProduct(productId);
+                var userId = GetUserId();
+                await shoppingCartService.RemoveProduct(userId,productId);
                 logger.LogInformation("Product is deleted successfully");
                 return Ok();
             }
@@ -70,7 +72,8 @@ namespace AppointmentAPI.Controllers
         {
             try
             {
-                decimal totalPrice = await shoppingCartService.TotalPrice();
+                var userId = GetUserId();
+                decimal totalPrice = await shoppingCartService.TotalPrice(userId);
                 logger.LogInformation("Total price");
                 return Ok(totalPrice);
             }
@@ -91,7 +94,8 @@ namespace AppointmentAPI.Controllers
         {
             try
             {
-                var cart = await shoppingCartService.GetCartItems();
+                var userId = GetUserId();
+                var cart = await shoppingCartService.GetCartItems(userId);
                 logger.LogInformation("All products");
                 return Ok(cart);
             }
@@ -105,6 +109,11 @@ namespace AppointmentAPI.Controllers
                 logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "We are currently unable to process your request!" });
             }
+        }
+
+        private int GetUserId()
+        {
+            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         }
     }
 }

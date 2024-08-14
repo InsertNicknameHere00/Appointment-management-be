@@ -5,14 +5,19 @@ namespace AppointmentAPI.Services
 {
     public class ShoppingCartService : IShoppingCartService
     {
-        List<CartItem> products ;
+        Dictionary<int,List<CartItem>> cart ;
         public ShoppingCartService() { 
-            products = new List<CartItem>();
+            cart = new Dictionary<int, List<CartItem>>();
         }
 
-        public Task AddProduct(Product product, int quantity)
+        public Task AddProduct(int userId,Product product, int quantity)
         {
-            var existingCartItem = products.FirstOrDefault(ci => ci.Product.ProductId == product.ProductId);
+            if (!cart.ContainsKey(userId))
+            {
+                cart[userId] = new List<CartItem>();
+            }
+
+            var existingCartItem = cart[userId].FirstOrDefault(ci => ci.Product.ProductId == product.ProductId);
 
             if (existingCartItem != null)
             {
@@ -22,39 +27,55 @@ namespace AppointmentAPI.Services
             else
             {
                 // Otherwise, add a new CartItem to the cart
-                products.Add(new CartItem { Product = product, Quantity = quantity });
+                cart[userId].Add(new CartItem { Product = product, Quantity = quantity });
             }
 
             return Task.CompletedTask;
         }
 
-        public Task ClearCart()
+        public Task ClearCart(int userId)
         {
-            products.Clear();
-            return Task.CompletedTask;
-        }
-
-        public Task<List<CartItem>> GetCartItems()
-        {
-            return Task.FromResult(products);
-        }
-
-        public Task RemoveProduct(int id)
-        {
-            var existingCartItem = products.FirstOrDefault(ci => ci.Product.ProductId == id);
-
-            if (existingCartItem != null)
+            if (cart.ContainsKey(userId))
             {
-                products.Remove(existingCartItem);
+                cart[userId].Clear();
             }
+            return Task.CompletedTask;
+        }
+
+        public Task<IEnumerable<CartItem>> GetCartItems(int userId)
+        {
+            if (cart.ContainsKey(userId))
+            {
+                return Task.FromResult<IEnumerable<CartItem>>(cart[userId]);
+            }
+
+            return Task.FromResult<IEnumerable<CartItem>>(new List<CartItem>());
+        }
+
+        public Task RemoveProduct(int userId,int id)
+        {
+            if (cart.ContainsKey(userId))
+            {
+                var existingCartItem = cart[userId].FirstOrDefault(ci => ci.Product.ProductId == id);
+                if (existingCartItem != null)
+                {
+                    cart[userId].Remove(existingCartItem);
+                }
+            }
+
 
             return Task.CompletedTask;
         }
 
-        public Task<decimal> TotalPrice()
+        public Task<decimal> TotalPrice(int userId)
         {
-            var totalPrice = products.Sum(p => p.Product.Price * p.Quantity);
-            return Task.FromResult(totalPrice);
+            if (cart.ContainsKey(userId))
+            {
+                var totalPrice = cart[userId].Sum(p => p.Product.Price * p.Quantity);
+                return Task.FromResult(totalPrice);
+            }
+
+            return Task.FromResult(0m);
         }
     }
 }
