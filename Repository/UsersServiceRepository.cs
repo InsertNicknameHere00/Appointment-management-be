@@ -27,9 +27,11 @@ namespace AppointmentAPI.Repository
         public async Task<Users> AddUsers(Users users)
         {
             Users newUser = new Users();
-            newUser.UserName = users.UserName;
+            newUser.FirstName = users.FirstName;
+            newUser.LastName = users.LastName;
             newUser.Email = users.Email;
             newUser.PasswordHash = users.PasswordHash;
+            newUser.PhoneNumber = users.PhoneNumber;
             newUser.RoleID = users.RoleID;
 
             _context.Users.Add(newUser);
@@ -38,16 +40,36 @@ namespace AppointmentAPI.Repository
             return newUser;
         }
 
-        public async Task<Users> UpdateUsersByID(int id, Users users)
+        public async Task<Users> UpdateAdminByID(int id, Users users)
         {
             var existingUser = await _context.Users.FindAsync(id);
             if (existingUser != null)
             {
                 existingUser.UserID = id;
-                existingUser.UserName = users.UserName;
+                existingUser.FirstName = users.FirstName;
+                existingUser.LastName = users.LastName;
                 existingUser.Email = users.Email;
                 existingUser.PasswordHash = users.PasswordHash;
+                existingUser.PhoneNumber = users.PhoneNumber;
                 existingUser.RoleID = users.RoleID;
+
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
+            return existingUser;
+        }
+
+        public async Task<Users> UpdateUsers(int id, Users users)
+        {
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser != null)
+            {
+                existingUser.UserID = id;
+                existingUser.FirstName = users.FirstName;
+                existingUser.LastName = users.LastName;
+                existingUser.Email = users.Email;
+                existingUser.PasswordHash = users.PasswordHash;
+                existingUser.PhoneNumber = users.PhoneNumber;
 
                 _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
@@ -63,8 +85,19 @@ namespace AppointmentAPI.Repository
             return true;
         }
 
+        public async Task<Users> ForgottenPassword(int id, Users users) {
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser != null)
+            {
+                existingUser.PasswordHash = users.PasswordHash;
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
+            return existingUser;
+        }
+
         public async Task<bool> RegisteredUserExists(Users users) {
-            bool userExists = await _context.Users.AnyAsync(x => x.Email == users.Email || x.UserName == users.UserName);
+            bool userExists = await _context.Users.AnyAsync(x => x.Email == users.Email);
             if (userExists)
             {
                 return false;
@@ -79,11 +112,13 @@ namespace AppointmentAPI.Repository
             if (RegisteredUserExists(users).Result==true)
             {
                 Users account = new Users();
-                account.UserName = users.UserName;
+                account.FirstName = users.FirstName;
+                account.LastName = users.LastName;
                 account.PasswordHash = users.PasswordHash;
                 account.Email = users.Email;
+                account.PhoneNumber = users.PhoneNumber;
                 //Temporary leaving RoleID hardcoded to 1, cause we lack RoleID 2 in table
-                account.RoleID = 1;
+                account.RoleID = 2;
                 _context.Users.Add(account);
                 await _context.SaveChangesAsync();
                 return true;

@@ -38,8 +38,13 @@ namespace AppointmentAPI.Services
             return users;
         }
 
-        public async Task<Users> UpdateUsersByID(int id,Users users) {
-         return await _repository.UpdateUsersByID(id, users);
+        public async Task<Users> UpdateUsers(int id, Users users) {
+         return await _repository.UpdateUsers(id, users);
+        }
+
+        public async Task<Users> UpdateAdminByID(int id, Users users)
+        {
+            return await _repository.UpdateAdminByID(id, users);
         }
 
         public async Task<Users> AddUsers(Users users)
@@ -56,6 +61,12 @@ namespace AppointmentAPI.Services
                 return false;
             }
             return true;
+        }
+
+        public async Task<Users> ForgottenPassword(int id, Users users)
+        {
+            var usersTemp = await _repository.ForgottenPassword(id, users);
+            return usersTemp;
         }
 
 
@@ -88,7 +99,7 @@ namespace AppointmentAPI.Services
             {
                 new Claim(ClaimTypes.Role, userInfo.Role.RoleName),
                 new Claim(JwtRegisteredClaimNames.NameId, userInfo.UserID?.ToString() ?? string.Empty),
-                new Claim(JwtRegisteredClaimNames.PreferredUsername, userInfo.UserName),
+                new Claim(JwtRegisteredClaimNames.PreferredUsername, userInfo.FirstName),
                 new Claim(JwtRegisteredClaimNames.Email, userInfo.Email)
 
                 //new Claim("Role name", userInfo.Role.RoleName),
