@@ -12,6 +12,7 @@ namespace AppointmentAPI.Controllers
     public class ShoppingCartController : ControllerBase
     {
         private readonly IShoppingCartService shoppingCartService;
+        private readonly IOrderService orderService;
         private readonly ILogger<ShoppingCartController> logger;
 
         public ShoppingCartController(IShoppingCartService shoppingCartService, ILogger<ShoppingCartController> logger)
@@ -33,6 +34,36 @@ namespace AppointmentAPI.Controllers
             catch (KeyNotFoundException ex)
             {
                 logger.LogInformation("Product is not added successfully");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "We are currently unable to process your request!" });
+            }
+        }
+
+        [HttpPost("Checkout")]
+        public async Task<IActionResult> Checkout()
+        {
+            try
+            {
+                var userId = GetUserId();
+                var cartItems = await shoppingCartService.GetCartItems(userId);
+
+                if (!cartItems.Any())
+                {
+                    return BadRequest("Cart is empty.");
+                }
+
+                await orderService.CreateOrderAsync(userId, cartItems);
+                await shoppingCartService.ClearCart(userId);
+                logger.LogInformation("Order is successfully created");
+                return Ok();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogInformation("Order is not successfully created");
                 return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
