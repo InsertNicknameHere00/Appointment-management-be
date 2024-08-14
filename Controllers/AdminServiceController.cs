@@ -64,7 +64,7 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAdminService([FromHeader] int id, [FromBody] AdminService _service)
         {
             try
@@ -87,7 +87,7 @@ namespace AppointmentAPI.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<AdminService>> AddAdminService([FromBody] AdminService _service)
         {
             try
@@ -109,7 +109,7 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAdminService([FromHeader] int id)
         {
             try
