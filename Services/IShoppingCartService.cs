@@ -4,10 +4,10 @@ namespace AppointmentAPI.Services
 {
     public interface IShoppingCartService
     {
-        Task<List<CartItem>> GetCartItems();
-        Task AddProduct(Product product, int quantity);
-        Task RemoveProduct(int id);
-        Task<decimal> TotalPrice();
-        Task ClearCart();
+        Task<IEnumerable<CartItem>> GetCartItems(int userId);
+        Task AddProduct(int userId,Product product, int quantity);
+        Task RemoveProduct(int userId,int id);
+        Task<decimal> TotalPrice(int userId);
+        Task ClearCart(int userId);
     }
 }
