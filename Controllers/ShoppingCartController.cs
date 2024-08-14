@@ -12,6 +12,7 @@ namespace AppointmentAPI.Controllers
     {
         private readonly IShoppingCartService shoppingCartService;
         private readonly ILogger<ShoppingCartController> logger;
+        //private readonly List<CartItem> cart = new List<CartItem>();
 
         public ShoppingCartController(IShoppingCartService shoppingCartService, ILogger<ShoppingCartController> logger)
         {
@@ -40,8 +41,9 @@ namespace AppointmentAPI.Controllers
             }
         }
 
+
         [HttpDelete("{productId}")]
-        public async Task<IActionResult> DeleteReview([FromHeader] int productId)
+        public async Task<IActionResult> DeleteProduct([FromHeader] int productId)
         {
             try
             {
@@ -85,7 +87,7 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpGet("Products in the cart")]
-        public async Task<IActionResult> GetProducts()
+        public async Task<ActionResult<IEnumerable<CartItem>>> GetProducts()
         {
             try
             {

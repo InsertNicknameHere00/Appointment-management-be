@@ -5,7 +5,7 @@ namespace AppointmentAPI.Services
 {
     public class ShoppingCartService : IShoppingCartService
     {
-        List<CartItem> products;
+        List<CartItem> products ;
         public ShoppingCartService() { 
             products = new List<CartItem>();
         }
@@ -36,7 +36,7 @@ namespace AppointmentAPI.Services
 
         public Task<List<CartItem>> GetCartItems()
         {
-            return Task.FromResult<List<CartItem>>(products);
+            return Task.FromResult(products);
         }
 
         public Task RemoveProduct(int id)
