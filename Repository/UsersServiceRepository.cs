@@ -24,6 +24,12 @@ namespace AppointmentAPI.Repository
             return users;
         }
 
+        public Users GetUserByID(int id)
+        {
+            var user = _context.Users.Find(id);
+            return user;
+        }
+
         public async Task<Users> AddUsers(Users users)
         {
             Users newUser = new Users();

@@ -29,6 +29,7 @@
         [Required]
         public int ServiceId { get; set; }
 
+        [ForeignKey(nameof(ServiceId))]
         public virtual SalonService Service { get; set; } = null!;
     }
 }

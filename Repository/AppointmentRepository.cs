@@ -2,6 +2,7 @@
 {
     using AppointmentAPI.Data;
     using AppointmentAPI.Entities;
+    using AppointmentAPI.Entities.Enums;
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -67,6 +68,7 @@
         {
             Appointment tempAppointment = await GetById(id);
             tempAppointment.ClientId = clientId;
+            tempAppointment.Status = StatusType.Reserved;
 
             await dbContext.SaveChangesAsync();
         }
@@ -89,6 +91,7 @@
         {
             Appointment tempAppointment = await GetById(id);
             tempAppointment.ClientId = null;
+            tempAppointment.Status = StatusType.Available;
 
             await dbContext.SaveChangesAsync();
         }

@@ -5,16 +5,19 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     [Route("api/[controller]")]
     [ApiController]
     public class AppointmentController : ControllerBase
     {
         private readonly IAppointmentService appointmentService;
+        private readonly ILogger<AdminServiceController> logger;
 
-        public AppointmentController(IAppointmentService appointmentService)
+        public AppointmentController(IAppointmentService appointmentService, ILogger<AdminServiceController> logger)
         {
             this.appointmentService = appointmentService;
+            this.logger = logger;
         }
 
         [HttpGet("all")]
@@ -24,13 +27,19 @@
             try
             {
                 var appointmentsTemp = await this.appointmentService.GetAll();
+                logger.LogInformation("Successful request");
 
                 return Ok(appointmentsTemp);
             }
-            catch (Exception)
+            catch (KeyNotFoundException ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                 "Error retrieving data from the database");
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
         }
 
@@ -48,13 +57,20 @@
                 else
                 {
                     var appointmentTemp = await this.appointmentService.GetById(id);
+                    logger.LogInformation("Successful request");
 
                     return Ok(appointmentTemp);
                 }
             }
-            catch (Exception)
+            catch (KeyNotFoundException ex)
             {
-                return StatusCode(StatusCodes.Status404NotFound, "Appointment not found");
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
         }
 
@@ -64,45 +80,65 @@
             try 
             {
                 var appointmentTemp = await this.appointmentService.CreateAsync(userId, serviceId);
+                logger.LogInformation("Successful request");
 
                 return Ok(appointmentTemp);
-            } 
-            catch (Exception) 
+            }
+            catch (KeyNotFoundException ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                 "Error retrieving data from the database");
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
         }
 
         [HttpPut("edit/id")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit([FromHeader] int id, int userId, string status)
         {
             try
             {
                 var appointmentTemp = await this.appointmentService.EditAsync(id, userId, status);
+                logger.LogInformation("Successful request");
 
                 return Ok(appointmentTemp);
             }
-            catch (Exception)
+            catch (KeyNotFoundException ex)
             {
-                return StatusCode(StatusCodes.Status304NotModified,
-                 "Error editing data for appointment");
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status304NotModified, new { message = "Error while editing an appointment" });
             }
         }
 
         [HttpDelete("id")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromHeader] int id)
         {
             try
             {
                 await this.appointmentService.DeleteAsync(id);
+                logger.LogInformation("Successful request");
 
                 return Ok();
             }
-            catch (Exception)
+            catch (KeyNotFoundException ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                  "Error retrieving data from the database");
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
             }
         }
 
@@ -113,11 +149,18 @@
             try
             {
                 await this.appointmentService.BookAnAppointment(id, clientId);
+                logger.LogInformation("Successful request");
 
                 return Ok();
             }
-            catch (Exception)
+            catch (KeyNotFoundException ex)
             {
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
                 return StatusCode(StatusCodes.Status304NotModified, new { message = "Error while booking an appointment" });
             }
         }
@@ -132,7 +175,12 @@
 
                 return Ok();
             }
-            catch (Exception)
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogInformation("Problem with DB");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status304NotModified, new { message = "Error while canceling an appointment"});
             }

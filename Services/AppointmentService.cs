@@ -10,17 +10,26 @@
     public class AppointmentService : IAppointmentService
     {
         private readonly IAppointmentRepository repository;
+        private readonly ISalonServiceRepository salonServiceRepository;
+        private readonly IUsersServiceRepository usersServiceRepository;
 
-        public AppointmentService(IAppointmentRepository repository)
+        public AppointmentService(IAppointmentRepository repository, ISalonServiceRepository salonServiceRepository, IUsersServiceRepository usersServiceRepository)
         {
             this.repository = repository;
+            this.salonServiceRepository = salonServiceRepository;
+            this.usersServiceRepository = usersServiceRepository;
         }
 
         public async Task<IEnumerable<Appointment>> GetAll()
         {
-            var result = await repository.GetAll();
+            var result = await this.repository.GetAll();
             if (result.Any()) 
-            { 
+            {
+                foreach (var item in result)
+                {
+                    MapServiceAndUserToEntity(item);
+                }
+
                 return result;
             }
             else
@@ -41,6 +50,8 @@
                 UserId = userId,
                 ServiceId = serviceId
             };
+
+            MapServiceAndUserToEntity(appointment);
 
             var result = await this.repository.Add(appointment);
             if (result != null)
@@ -82,6 +93,7 @@
                 appointment.EndDate = DateTime.Now.AddMinutes(30);
                 appointment.Status = (StatusType)statusResult!;
                 appointment.UserId = userId;
+                MapServiceAndUserToEntity(appointment);
 
                 await this.repository.Update(appointment);
 
@@ -104,6 +116,8 @@
             var result = await this.repository.GetById(id);
             if (result != null)
             {
+                MapServiceAndUserToEntity(result);
+
                 return result;
             }
             else
@@ -150,5 +164,13 @@
 
             await this.repository.CancelAnAppointment(id);
         }
+
+        private void MapServiceAndUserToEntity(Appointment appointment) 
+        {
+            var service = this.salonServiceRepository.Search(appointment.ServiceId);
+            appointment.Service = service;
+            var user = this.usersServiceRepository.GetUserByID(appointment.UserId);
+            appointment.User = user;
+        }  
     }
 }
