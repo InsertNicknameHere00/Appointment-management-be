@@ -99,7 +99,7 @@ namespace AppointmentAPI.Services
             {
                 new Claim(ClaimTypes.Role, userInfo.Role.RoleName),
                 new Claim(JwtRegisteredClaimNames.NameId, userInfo.UserID?.ToString() ?? string.Empty),
-                new Claim(JwtRegisteredClaimNames.PreferredUsername, userInfo.UserName),
+                new Claim(JwtRegisteredClaimNames.PreferredUsername, userInfo.FirstName),
                 new Claim(JwtRegisteredClaimNames.Email, userInfo.Email)
 
                 //new Claim("Role name", userInfo.Role.RoleName),
