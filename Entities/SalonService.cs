@@ -15,6 +15,6 @@ namespace AppointmentAPI.Entities
         [MaxLength(255)]
         public string ServiceDescription { get; set; }
 
-        public virtual SalonService SalonServices {get;set;}
+       // public virtual SalonService SalonServices {get;set;}
     }
 }
