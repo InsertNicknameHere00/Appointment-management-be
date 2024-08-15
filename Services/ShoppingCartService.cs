@@ -10,7 +10,7 @@ namespace AppointmentAPI.Services
             cart = new Dictionary<int, List<CartItem>>();
         }
 
-        public Task AddProduct(int userId,Product product, int quantity)
+        public async Task<Dictionary<int,List<CartItem>>> AddProduct(int userId,Product product, int quantity)
         {
             if (!cart.ContainsKey(userId))
             {
@@ -30,16 +30,17 @@ namespace AppointmentAPI.Services
                 cart[userId].Add(new CartItem { Product = product, Quantity = quantity });
             }
 
-            return Task.CompletedTask;
+            return cart;
         }
 
-        public Task ClearCart(int userId)
+        public async Task<bool> ClearCart(int userId)
         {
             if (cart.ContainsKey(userId))
             {
                 cart[userId].Clear();
+                return true;
             }
-            return Task.CompletedTask;
+            return false;
         }
 
         public Task<IEnumerable<CartItem>> GetCartItems(int userId)
@@ -52,7 +53,7 @@ namespace AppointmentAPI.Services
             return Task.FromResult<IEnumerable<CartItem>>(new List<CartItem>());
         }
 
-        public Task RemoveProduct(int userId,int id)
+        public async Task<bool> RemoveProduct(int userId,int id)
         {
             if (cart.ContainsKey(userId))
             {
@@ -60,11 +61,11 @@ namespace AppointmentAPI.Services
                 if (existingCartItem != null)
                 {
                     cart[userId].Remove(existingCartItem);
+                    return true;
                 }
             }
 
-
-            return Task.CompletedTask;
+            return false;
         }
 
         public Task<decimal> TotalPrice(int userId)
@@ -77,5 +78,6 @@ namespace AppointmentAPI.Services
 
             return Task.FromResult(0m);
         }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
+using Microsoft.CodeAnalysis;
 
 namespace AppointmentAPI.Repository
 {
@@ -25,9 +26,18 @@ namespace AppointmentAPI.Repository
             return item;
         }
 
-        public Task<Order> UpdateOrder(Order order)
+        public async Task<Order> UpdateOrder(Order order)
         {
-            throw new NotImplementedException();
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+            return order;
         }
+
+        public async Task<Order> GetOrderById(int id)
+        {
+            return await _context.Orders.FindAsync(id);
+        }
+
+        
     }
 }

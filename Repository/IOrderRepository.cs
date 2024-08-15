@@ -7,6 +7,7 @@ namespace AppointmentAPI.Repository
         Task<Order> AddOrder(Order order);
         Task<OrderItem> AddOrderItem(OrderItem item);
         Task<Order> UpdateOrder(Order order);
+        Task<Order> GetOrderById(int id);
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AppointmentAPI.Entities.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AppointmentAPI.Entities
@@ -14,6 +15,8 @@ namespace AppointmentAPI.Entities
         [Required]
         public string OrderAddress { get; set; }
         public decimal TotalPrice { get; set; }
+        [Required]
+        public OrderStatus OrderStatus { get; set; }
         public List<OrderItem> OrderItems { get; set; }
     }
 }

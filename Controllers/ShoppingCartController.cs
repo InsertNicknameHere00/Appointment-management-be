@@ -2,6 +2,7 @@
 using AppointmentAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using System.Security.Claims;
 
 namespace AppointmentAPI.Controllers
@@ -44,27 +45,33 @@ namespace AppointmentAPI.Controllers
             }
         }
 
-        [HttpPost("Checkout")]
-        public async Task<IActionResult> Checkout()
+        [HttpPost("Checkout{address}")]
+        public async Task<IActionResult> Checkout([FromBody] string address)
         {
             try
             {
                 var userId = GetUserId();
                 var cartItems = await shoppingCartService.GetCartItems(userId);
 
-                /* if (!cartItems.Any())
+                if (!cartItems.Any())
                  {
                      return BadRequest("Cart is empty.");
-                 }*/
-                if (cartItems.Count() == 0)
+                 }
+
+                var r = orderService.CheckQuantity(cartItems);
+                if (r=="")
                 {
-                    Console.WriteLine("null");
+                    var result = await orderService.CreateOrderAsync(userId, cartItems, address);
+                    await shoppingCartService.ClearCart(userId);
+                    logger.LogInformation("Order is successfully created");
+                    return Ok(result);
+                }
+                else
+                {
+                    logger.LogInformation(r + " not enough quantity.");
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = r+" not enough quantity" });
                 }
 
-                var r =await orderService.CreateOrderAsync(userId, cartItems);
-                await shoppingCartService.ClearCart(userId);
-                logger.LogInformation("Order is successfully created");
-                return Ok(r);
             }
             catch (KeyNotFoundException ex)
             {
@@ -85,9 +92,9 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var userId = GetUserId();
-                await shoppingCartService.RemoveProduct(userId,productId);
+                var result=await shoppingCartService.RemoveProduct(userId,productId);
                 logger.LogInformation("Product is deleted successfully");
-                return Ok();
+                return Ok(result);
             }
             catch (KeyNotFoundException ex)
             {
@@ -147,9 +154,33 @@ namespace AppointmentAPI.Controllers
             }
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateRevieOrder([FromHeader] int id, [FromBody] Order _order)
+        {
+            try
+            {
+                var review = await orderService.UpdateOrder(id, _order);
+                logger.LogInformation("The order is successfully updated");
+                return Ok(review);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogInformation("Order is not found");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "We are currently unable to process your request!" });
+            }
+        }
+
+
         private int GetUserId()
         {
             return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         }
+
+
     }
 }
