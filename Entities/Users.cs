@@ -28,6 +28,9 @@
         [Required]
         public int? RoleID { get; set; }
 
+        [Required]
+        public string? VerifiedStatus { get; set; }
+
         [ForeignKey("RoleID")]
         public virtual Role Role { get; set; }
 

@@ -33,6 +33,7 @@ namespace AppointmentAPI.Repository
             newUser.PasswordHash = users.PasswordHash;
             newUser.PhoneNumber = users.PhoneNumber;
             newUser.RoleID = users.RoleID;
+            newUser.VerifiedStatus = users.VerifiedStatus;
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
@@ -52,6 +53,7 @@ namespace AppointmentAPI.Repository
                 existingUser.PasswordHash = users.PasswordHash;
                 existingUser.PhoneNumber = users.PhoneNumber;
                 existingUser.RoleID = users.RoleID;
+                existingUser.VerifiedStatus = users.VerifiedStatus;
 
                 _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
@@ -119,6 +121,7 @@ namespace AppointmentAPI.Repository
                 account.PhoneNumber = users.PhoneNumber;
                 //Temporary leaving RoleID hardcoded to 1, cause we lack RoleID 2 in table
                 account.RoleID = 2;
+                account.VerifiedStatus = "Pending ...";
                 _context.Users.Add(account);
                 await _context.SaveChangesAsync();
                 return true;
@@ -127,4 +130,4 @@ namespace AppointmentAPI.Repository
         }
     }
 
-        }
+}
