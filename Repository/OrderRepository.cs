@@ -18,6 +18,13 @@ namespace AppointmentAPI.Repository
             return order;
         }
 
+        public async Task<OrderItem> AddOrderItem(OrderItem item)
+        {
+            await _context.OrderItem.AddAsync(item);
+            await _context.SaveChangesAsync();
+            return item;
+        }
+
         public Task<Order> UpdateOrder(Order order)
         {
             throw new NotImplementedException();

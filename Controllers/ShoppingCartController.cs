@@ -15,9 +15,10 @@ namespace AppointmentAPI.Controllers
         private readonly IOrderService orderService;
         private readonly ILogger<ShoppingCartController> logger;
 
-        public ShoppingCartController(IShoppingCartService shoppingCartService, ILogger<ShoppingCartController> logger)
+        public ShoppingCartController(IShoppingCartService shoppingCartService, ILogger<ShoppingCartController> logger,IOrderService _orderService)
         {
             this.shoppingCartService = shoppingCartService;
+            this.orderService = _orderService;
             this.logger = logger;
         }
 
@@ -51,15 +52,19 @@ namespace AppointmentAPI.Controllers
                 var userId = GetUserId();
                 var cartItems = await shoppingCartService.GetCartItems(userId);
 
-                if (!cartItems.Any())
+                /* if (!cartItems.Any())
+                 {
+                     return BadRequest("Cart is empty.");
+                 }*/
+                if (cartItems.Count() == 0)
                 {
-                    return BadRequest("Cart is empty.");
+                    Console.WriteLine("null");
                 }
 
-                await orderService.CreateOrderAsync(userId, cartItems);
+                var r =await orderService.CreateOrderAsync(userId, cartItems);
                 await shoppingCartService.ClearCart(userId);
                 logger.LogInformation("Order is successfully created");
-                return Ok();
+                return Ok(r);
             }
             catch (KeyNotFoundException ex)
             {

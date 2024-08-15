@@ -11,6 +11,8 @@ namespace AppointmentAPI.Entities
         [ForeignKey("userId")]
         public int UserId { get; set; }
         public DateTime OrderDate { get; set; }
+        [Required]
+        public string OrderAddress { get; set; }
         public decimal TotalPrice { get; set; }
         public List<OrderItem> OrderItems { get; set; }
     }

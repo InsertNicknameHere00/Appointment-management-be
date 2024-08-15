@@ -4,6 +4,6 @@ namespace AppointmentAPI.Services
 {
     public interface IOrderService
     {
-        Task CreateOrderAsync(int userId, IEnumerable<CartItem> cartItems);
+        Task<Order> CreateOrderAsync(int userId, IEnumerable<CartItem> cartItems);
     }
 }
