@@ -1,6 +1,7 @@
 ﻿using AppointmentAPI.Entities;
 using AppointmentAPI.Entities.Enums;
-using AppointmentAPI.Repository;
+using AppointmentAPI.Repository.Interfaces;
+using AppointmentAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;

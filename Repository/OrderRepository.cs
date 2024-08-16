@@ -1,5 +1,6 @@
 ﻿using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
+using AppointmentAPI.Repository.Interfaces;
 using Microsoft.CodeAnalysis;
 
 namespace AppointmentAPI.Repository

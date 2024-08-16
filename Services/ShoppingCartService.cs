@@ -1,4 +1,5 @@
 ﻿using AppointmentAPI.Entities;
+using AppointmentAPI.Services.Interfaces;
 using Microsoft.CodeAnalysis;
 
 namespace AppointmentAPI.Services

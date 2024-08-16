@@ -1,6 +1,6 @@
 ﻿using AppointmentAPI.Entities;
 
-namespace AppointmentAPI.Services
+namespace AppointmentAPI.Services.Interfaces
 {
     public interface IProductService
     {

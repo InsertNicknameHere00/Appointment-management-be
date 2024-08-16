@@ -1,5 +1,5 @@
 ﻿using AppointmentAPI.Entities;
-using AppointmentAPI.Services;
+using AppointmentAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
@@ -58,8 +58,8 @@ namespace AppointmentAPI.Controllers
                      return BadRequest("Cart is empty.");
                  }
 
-                var r = orderService.CheckQuantity(cartItems);
-                if (r=="")
+                var productName = orderService.CheckQuantity(cartItems);
+                if (productName == "")
                 {
                     var result = await orderService.CreateOrderAsync(userId, cartItems, address);
                     await shoppingCartService.ClearCart(userId);
@@ -68,8 +68,8 @@ namespace AppointmentAPI.Controllers
                 }
                 else
                 {
-                    logger.LogInformation(r + " not enough quantity.");
-                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = r+" not enough quantity" });
+                    logger.LogInformation(productName + " not enough quantity.");
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = productName  + " not enough quantity" });
                 }
 
             }

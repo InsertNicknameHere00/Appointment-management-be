@@ -1,5 +1,6 @@
 ﻿using AppointmentAPI.Entities;
-using AppointmentAPI.Repository;
+using AppointmentAPI.Repository.Interfaces;
+using AppointmentAPI.Services.Interfaces;
 using NuGet.Protocol.Core.Types;
 
 namespace AppointmentAPI.Services

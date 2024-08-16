@@ -1,6 +1,6 @@
 ﻿using AppointmentAPI.Entities;
 
-namespace AppointmentAPI.Repository
+namespace AppointmentAPI.Repository.Interfaces
 {
     public interface IOrderRepository
     {

@@ -1,5 +1,6 @@
 ﻿using AppointmentAPI.Entities;
 using AppointmentAPI.Services;
+using AppointmentAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
