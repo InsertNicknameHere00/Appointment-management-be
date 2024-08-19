@@ -58,7 +58,6 @@ namespace AppointmentAPI.Controllers
             var userTemp = await _usersService.RegisterUsers(users);
             var token = _usersService.GenerateJSONWebToken(users);
             var url = Url.Action("ConfirmEmail", "Users", new {users.Email, token });
-            
             _emailRequest.ToEmail = users.Email;
             _emailRequest.Subject = "Email Verification";
             _emailRequest.Body = "https://localhost:7158"+$"{url}";
@@ -117,7 +116,7 @@ namespace AppointmentAPI.Controllers
             //dummy push test
         }
 
-        [HttpPost("ConfirmEmail")]
+        [HttpPost("confirmEmail")]
         public async Task<IActionResult> ConfirmEmail(Users users, string token)
         {
             var user = await _usersService.GetUsersByEmail(users.Email);
