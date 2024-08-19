@@ -1,7 +1,7 @@
 ﻿namespace AppointmentAPI.Controllers
 {
     using AppointmentAPI.Entities;
-    using AppointmentAPI.Services;
+    using AppointmentAPI.Services.Interfaces;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;

@@ -1,7 +1,9 @@
 using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
 using AppointmentAPI.Repository;
+using AppointmentAPI.Repository.Interfaces;
 using AppointmentAPI.Services;
+using AppointmentAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -97,8 +99,8 @@ builder.Services.AddScoped(typeof(IUsersServiceRepository), (typeof(UsersService
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
-builder.Services.AddControllers().AddJsonOptions(x =>
-                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+//builder.Services.AddControllers().AddJsonOptions(x =>
+//                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 var app = builder.Build();
 

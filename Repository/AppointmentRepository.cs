@@ -3,6 +3,7 @@
     using AppointmentAPI.Data;
     using AppointmentAPI.Entities;
     using AppointmentAPI.Entities.Enums;
+    using AppointmentAPI.Repository.Interfaces;
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;

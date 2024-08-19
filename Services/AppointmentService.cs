@@ -3,6 +3,8 @@
     using AppointmentAPI.Entities;
     using AppointmentAPI.Entities.Enums;
     using AppointmentAPI.Repository;
+    using AppointmentAPI.Repository.Interfaces;
+    using AppointmentAPI.Services.Interfaces;
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -25,10 +27,10 @@
             var result = await this.repository.GetAll();
             if (result.Any()) 
             {
-                foreach (var item in result)
-                {
-                    MapServiceAndUserToEntity(item);
-                }
+                //foreach (var item in result)
+                //{
+                //    MapServiceAndUserToEntity(item);
+                //}
 
                 return result;
             }
@@ -51,7 +53,7 @@
                 ServiceId = serviceId
             };
 
-            MapServiceAndUserToEntity(appointment);
+            //MapServiceAndUserToEntity(appointment);
 
             var result = await this.repository.Add(appointment);
             if (result != null)
@@ -93,7 +95,7 @@
                 appointment.EndDate = DateTime.Now.AddMinutes(30);
                 appointment.Status = (StatusType)statusResult!;
                 appointment.UserId = userId;
-                MapServiceAndUserToEntity(appointment);
+                //MapServiceAndUserToEntity(appointment);
 
                 await this.repository.Update(appointment);
 
@@ -116,7 +118,7 @@
             var result = await this.repository.GetById(id);
             if (result != null)
             {
-                MapServiceAndUserToEntity(result);
+                //MapServiceAndUserToEntity(result);
 
                 return result;
             }

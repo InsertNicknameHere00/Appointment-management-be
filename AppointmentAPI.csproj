@@ -35,8 +35,4 @@
     <None Remove="Services\Interfaces\" />
     <None Remove="Repository\Interfaces\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\Interfaces\" />
-    <Folder Include="Repository\Interfaces\" />
-  </ItemGroup>
 </Project>
