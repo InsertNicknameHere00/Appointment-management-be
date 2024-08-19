@@ -58,7 +58,6 @@ namespace AppointmentAPI.Controllers
             var userTemp = await _usersService.RegisterUsers(users);
 
             var token = _usersService.GenerateJSONWebToken(users);
-
             var url = Url.Action("ConfirmEmail", "Users", new {users.Email, token });
 
             _emailRequest.ToEmail = users.Email;
