@@ -128,6 +128,18 @@ namespace AppointmentAPI.Repository
             }
             return false;
         }
+
+        public async Task<bool> ConfirmUserEmail(Users users, string token)
+        {
+            if (RegisteredUserExists(users).Result == false)
+            {
+                users.VerificationStatus = "Verified";
+                _context.Users.Update(users);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 
 }
