@@ -1,7 +1,9 @@
 using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
 using AppointmentAPI.Repository;
+using AppointmentAPI.Repository.Interfaces;
 using AppointmentAPI.Services;
+using AppointmentAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +41,14 @@ builder.Services.AddScoped<IAdminServices, AdminServices>();
 
 builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
 builder.Services.AddScoped<IReviewService, ReviewService>();
+
+builder.Services.AddScoped(typeof(IProductRepository), typeof(ProductRepository));
+builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddSingleton<IShoppingCartService, ShoppingCartService>();
+
+builder.Services.AddScoped(typeof(IOrderRepository), typeof(OrderRepository));
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 //JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
