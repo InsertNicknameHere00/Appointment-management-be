@@ -12,6 +12,7 @@ using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
@@ -32,7 +33,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<HaircutSalonDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddTransient<IEmailSendService, EmailSendService>();
-
 builder.Services.AddScoped<ISalonServices, SalonServices>();
 builder.Services.AddScoped(typeof(ISalonServiceRepository), typeof(SalonServiceRepository));
 builder.Services.AddScoped(typeof(IAdminServiceRepository), typeof(AdminServiceRepository));
@@ -41,6 +41,15 @@ builder.Services.AddScoped<IAdminServices, AdminServices>();
 
 builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
 builder.Services.AddScoped<IReviewService, ReviewService>();
+
+
+
+builder.Services.AddScoped<IUsersServices, UsersServices>();
+builder.Services.AddScoped<IUsersServiceRepository, UsersServiceRepository>();
+builder.Services.AddScoped(typeof(IUsersServices), (typeof(UsersServices)));
+builder.Services.AddScoped(typeof(IUsersServiceRepository), (typeof(UsersServiceRepository)));
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
 builder.Services.AddScoped(typeof(IProductRepository), typeof(ProductRepository));
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -93,17 +102,15 @@ builder.Services.AddSwaggerGen(c => {
 
 });
 
-builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
-builder.Services.AddScoped<IReviewService, ReviewService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IUsersServices, UsersServices>();
-builder.Services.AddScoped<IUsersServiceRepository, UsersServiceRepository>();
-builder.Services.AddScoped(typeof(IUsersServices), (typeof(UsersServices)));
-builder.Services.AddScoped(typeof(IUsersServiceRepository), (typeof(UsersServiceRepository)));
 
+
+
+//builder.Services.AddControllers().AddJsonOptions(x =>
+//                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 var app = builder.Build();
 
