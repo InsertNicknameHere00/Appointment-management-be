@@ -43,12 +43,21 @@ builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
 builder.Services.AddScoped<IReviewService, ReviewService>();
 
 
+
 builder.Services.AddScoped<IUsersServices, UsersServices>();
 builder.Services.AddScoped<IUsersServiceRepository, UsersServiceRepository>();
 builder.Services.AddScoped(typeof(IUsersServices), (typeof(UsersServices)));
 builder.Services.AddScoped(typeof(IUsersServiceRepository), (typeof(UsersServiceRepository)));
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+
+builder.Services.AddScoped(typeof(IProductRepository), typeof(ProductRepository));
+builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddSingleton<IShoppingCartService, ShoppingCartService>();
+
+builder.Services.AddScoped(typeof(IOrderRepository), typeof(OrderRepository));
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 //JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
