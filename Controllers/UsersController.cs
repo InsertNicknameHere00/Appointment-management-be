@@ -116,7 +116,7 @@ namespace AppointmentAPI.Controllers
             //dummy push test
         }
 
-        [HttpPost("ConfirmEmail")]
+        [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail([FromQuery]string email, [FromQuery]string token)
         {
             var user = await _usersService.GetUsersByEmail(email);
