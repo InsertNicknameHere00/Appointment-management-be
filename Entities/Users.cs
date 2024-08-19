@@ -31,6 +31,8 @@
         [Required]
         public string? VerificationStatus { get; set; }
 
+        public string? ResetToken { get; set; }
+
         [ForeignKey("RoleID")]
         public virtual Role Role { get; set; }
 

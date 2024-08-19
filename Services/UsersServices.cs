@@ -38,7 +38,8 @@ namespace AppointmentAPI.Services
             return users;
         }
 
-        public async Task<Users> UpdateUsers(int id, Users users) {
+        public async Task<Users> UpdateUsers(int id, Users users)
+        {
          return await _repository.UpdateUsers(id, users);
         }
 
@@ -65,7 +66,7 @@ namespace AppointmentAPI.Services
 
         public async Task<Users> ForgottenPassword(int id, Users users)
         {
-            var usersTemp = await _repository.ForgottenPassword(id, users);
+            var usersTemp = await _repository.ForgottenPassword(users);
             return usersTemp;
         }
 
@@ -76,9 +77,10 @@ namespace AppointmentAPI.Services
         }
 
 
-        public async Task<Users> GetUsersByEmail(string email)
+        public async Task<Users> GetUserByEmail(Users users)
         {
-            return await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
+            var usersTemp=await _repository.GetUserByEmail(users);
+            return usersTemp;
         }
 
         public async Task<Users> AuthenticateUser(LoginUsers login)
