@@ -116,10 +116,10 @@ namespace AppointmentAPI.Controllers
             //dummy push test
         }
 
-        [HttpPost("confirmEmail")]
-        public async Task<IActionResult> ConfirmEmail(Users users, string token)
+        [HttpPost("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery]string email, [FromQuery]string token)
         {
-            var user = await _usersService.GetUsersByEmail(users.Email);
+            var user = await _usersService.GetUsersByEmail(email);
             if (user == null || token == null)
             {
                 return NotFound();
@@ -134,6 +134,7 @@ namespace AppointmentAPI.Controllers
                 var result = await _usersService.ConfirmEmail(user, token);
                 if (result == true)
                 {
+                    Console.WriteLine("Exoo");
                     return Ok("Verified succeded");
                 }
                 else
