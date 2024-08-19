@@ -42,6 +42,14 @@ builder.Services.AddScoped<IAdminServices, AdminServices>();
 builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
 builder.Services.AddScoped<IReviewService, ReviewService>();
 
+
+builder.Services.AddScoped<IUsersServices, UsersServices>();
+builder.Services.AddScoped<IUsersServiceRepository, UsersServiceRepository>();
+builder.Services.AddScoped(typeof(IUsersServices), (typeof(UsersServices)));
+builder.Services.AddScoped(typeof(IUsersServiceRepository), (typeof(UsersServiceRepository)));
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+
 //JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -85,19 +93,12 @@ builder.Services.AddSwaggerGen(c => {
 
 });
 
-builder.Services.AddScoped(typeof(IReviewRepository), typeof(ReviewRepository));
-builder.Services.AddScoped<IReviewService, ReviewService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IUsersServices, UsersServices>();
-builder.Services.AddScoped<IUsersServiceRepository, UsersServiceRepository>();
-builder.Services.AddScoped(typeof(IUsersServices), (typeof(UsersServices)));
-builder.Services.AddScoped(typeof(IUsersServiceRepository), (typeof(UsersServiceRepository)));
-builder.Services.AddScoped<IAppointmentService, AppointmentService>();
-builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+
 
 //builder.Services.AddControllers().AddJsonOptions(x =>
 //                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
