@@ -11,6 +11,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace AppointmentAPI.Controllers
 {
@@ -21,11 +24,14 @@ namespace AppointmentAPI.Controllers
     {
         private readonly IUsersServices _usersService;
         private IConfiguration _configuration;
+        private EmailRequest _emailRequest = new EmailRequest();
+        private IEmailSendService _emailSendService;
 
-        public UsersController(IUsersServices usersService, IConfiguration configuration)
+        public UsersController(IUsersServices usersService, IConfiguration configuration, IEmailSendService emailSendService)
         {
             _usersService = usersService;
             _configuration = configuration;
+            _emailSendService = emailSendService;
         }
 
         [HttpGet]
@@ -50,6 +56,14 @@ namespace AppointmentAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] Users users) {
             var userTemp = await _usersService.RegisterUsers(users);
+            var token = _usersService.GenerateJSONWebToken(users);
+            var url = Url.Action("ConfirmEmail", "Users", new {users.Email, token });
+            
+            _emailRequest.ToEmail = users.Email;
+            _emailRequest.Subject = "Email Verification";
+            _emailRequest.Body = "https://localhost:7158"+$"{url}";
+
+            await _emailSendService.SendEmail(_emailRequest);
             return Ok(userTemp);
         }
 
@@ -67,9 +81,9 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPost("Update/{userId}")]
-        public async Task<IActionResult> UpdateUser([FromHeader]int userId, [FromBody] Users users)
+        public async Task<IActionResult> UpdateUser([FromHeader] int userId, [FromBody] Users users)
         {
-            var userTemp = await _usersService.UpdateUsers(userId,users);
+            var userTemp = await _usersService.UpdateUsers(userId, users);
             return Ok(userTemp);
         }
 
@@ -102,5 +116,33 @@ namespace AppointmentAPI.Controllers
             return Unauthorized();
             //dummy push test
         }
+
+        [HttpPost("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(Users users, string token)
+        {
+            var user = await _usersService.GetUsersByEmail(users.Email);
+            if (user == null || token == null)
+            {
+                return NotFound();
+            }
+            else if (user == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                token = token.Replace(" ", "+");
+                var result = await _usersService.ConfirmEmail(user, token);
+                if (result == true)
+                {
+                    return Ok("Verified succeded");
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+        }
+
     }
 }
