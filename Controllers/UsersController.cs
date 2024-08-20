@@ -114,7 +114,7 @@ namespace AppointmentAPI.Controllers
         [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail([FromQuery]string email, [FromQuery]string token)
         {
-            var user = await _usersService.GetUsersByEmail(email);
+            var user = await _usersService.GetUserByEmail(email);
             if (user == null || token == null)
             {
                 return NotFound();

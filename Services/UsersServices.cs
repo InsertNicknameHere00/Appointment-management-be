@@ -89,9 +89,9 @@ namespace AppointmentAPI.Services
         }
 
 
-        public async Task<Users> GetUserByEmail(Users users)
+        public async Task<Users> GetUserByEmail(string email)
         {
-            var usersTemp=await _repository.GetUserByEmail(users);
+            var usersTemp=await _repository.GetUserByEmail(email);
             return usersTemp;
         }
 
