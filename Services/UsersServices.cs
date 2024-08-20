@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -17,13 +18,16 @@ namespace AppointmentAPI.Services
         private readonly IUsersServiceRepository _repository;
         private readonly HaircutSalonDbContext _context;
         private readonly IConfiguration _configuration;
+        private EmailRequest _emailRequest = new EmailRequest();
+        private IEmailSendService _emailSendService;
 
 
-        public UsersServices(IUsersServiceRepository repository, HaircutSalonDbContext context, IConfiguration configuration)
+        public UsersServices(IUsersServiceRepository repository, HaircutSalonDbContext context, IConfiguration configuration, IEmailSendService emailSendService)
         {
             _repository = repository;
             _context = context;
             _configuration = configuration;
+            _emailSendService = emailSendService;
         }
 
         public async Task<List<Users>> GetAllUsers()
@@ -72,6 +76,14 @@ namespace AppointmentAPI.Services
 
         public async Task<bool> RegisterUsers(Users users) {
             bool usersTemp= await _repository.RegisterUsers(users);
+
+            var token = GenerateJSONWebToken(users);
+         
+            _emailRequest.ToEmail = users.Email;
+            _emailRequest.Subject = "Email Verification";
+            _emailRequest.Body = _configuration.GetSection("urls") + "ConfirmEmail?"+users.Email+"&"+token;
+            await _emailSendService.SendEmail(_emailRequest);
+
             return usersTemp;
         }
 
