@@ -155,7 +155,7 @@ namespace AppointmentAPI.Repository
 
         public async Task<string> GenerateVerificationToken(Users users)
         {
-            var existingUser = await _context.Users.FindAsync(users.UserID);
+            var existingUser = await _context.Users.FindAsync(users.Email);
             if (existingUser != null)
             {
                 existingUser.StartDate = DateTime.UtcNow;
@@ -170,7 +170,7 @@ namespace AppointmentAPI.Repository
 
         public async Task<string> GenerateResetToken(Users users)
         {
-            var existingUser = await _context.Users.FindAsync(users.UserID);
+            var existingUser = await _context.Users.FindAsync(users.Email);
             if (existingUser != null)
             {
                 existingUser.StartDate = DateTime.UtcNow;
