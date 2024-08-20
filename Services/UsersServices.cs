@@ -79,11 +79,13 @@ namespace AppointmentAPI.Services
             bool usersTemp= await _repository.RegisterUsers(users);
 
             var token = GenerateJSONWebToken(users);
-         
+
+            if (usersTemp == true) { 
             _emailRequest.ToEmail = users.Email;
             _emailRequest.Subject = "Email Verification";
             _emailRequest.Body = _configuration.GetSection("urls").Value + "/api/Users/ConfirmEmail?Email=" + users.Email+"&token="+token;
             await _emailSendService.SendEmail(_emailRequest);
+            }
 
             return usersTemp;
         }
