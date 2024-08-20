@@ -96,7 +96,7 @@ namespace AppointmentAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginUsers login)
         {
             if (login == null || string.IsNullOrEmpty(login.Email) || string.IsNullOrEmpty(login.PasswordHash))
@@ -115,7 +115,6 @@ namespace AppointmentAPI.Controllers
             }
 
             return Unauthorized();
-            //dummy push test
         }
 
         [HttpGet("ConfirmEmail")]

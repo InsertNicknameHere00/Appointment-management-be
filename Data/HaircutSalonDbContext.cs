@@ -20,6 +20,7 @@ namespace AppointmentAPI.Data
         public DbSet<Product> Product { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItem { get; set; }
+        public DbSet<PromoCodes> PromoCodes { get; set; }   
     }
 }
 

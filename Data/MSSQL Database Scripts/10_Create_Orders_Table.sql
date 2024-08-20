@@ -4,5 +4,6 @@ UserId int FOREIGN KEY REFERENCES Users(UserID) NOT NULL,
 OrderDate DateTime NOT NULL,
 OrderAddress varchar(255) NOT NULL,
 TotalPrice money NOT NULL,
-OrderStatus int NOT NULL
+OrderStatus int NOT NULL,
+PromoCodeID int null FOREIGN KEY REFERENCES PromoCodes(PromoCodeID)
 )

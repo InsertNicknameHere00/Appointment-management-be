@@ -59,6 +59,8 @@ builder.Services.AddSingleton<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped(typeof(IOrderRepository), typeof(OrderRepository));
 builder.Services.AddScoped<IOrderService, OrderService>();
 
+builder.Services.AddScoped(typeof(IPromoCodeRepository), typeof(PromoCodeRepository));
+
 //JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
     options.TokenValidationParameters = new TokenValidationParameters

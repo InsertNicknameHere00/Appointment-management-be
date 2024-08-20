@@ -24,5 +24,8 @@ namespace AppointmentAPI.Entities
          virtual Users User { get; set; }*/
         [ForeignKey("UserId")]
         public virtual Users User { get; set; }
+
+        //[ForeignKey("PromoCodeID")]
+        //public int PromoCodeID { get; set; }
     }
 }
