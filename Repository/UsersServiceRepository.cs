@@ -19,8 +19,8 @@ namespace AppointmentAPI.Repository
             var usersTemp = await _context.Users.ToListAsync();
             return usersTemp;
         }
-        public async Task<Users> GetUserByEmail(Users users) { 
-        var usersTemp = await _context.Users.SingleOrDefaultAsync(x => x.Email == users.Email);
+        public async Task<Users> GetUserByEmail(string email) { 
+        var usersTemp = await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
             return usersTemp;
         }
 
@@ -149,6 +149,21 @@ namespace AppointmentAPI.Repository
                 _context.Users.Update(users);
                 await _context.SaveChangesAsync();
                 return users.Email;
+            }
+            return "false";
+        }
+
+        public async Task<string> GenerateToken(Users users)
+        {
+            var existingUser = await _context.Users.FindAsync(users.UserID);
+            if (existingUser != null)
+            {
+                existingUser.StartDate = DateTime.UtcNow;
+                existingUser.EndDate = DateTime.UtcNow.AddHours(24);
+             existingUser.VerificationToken= Guid.NewGuid().ToString();
+                _context.Users.Update(users);
+                await _context.SaveChangesAsync();
+                return "true";
             }
             return "false";
         }

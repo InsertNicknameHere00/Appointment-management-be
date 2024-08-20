@@ -9,10 +9,8 @@ namespace AppointmentAPI.Services
         Task<Users> UpdateUsers(int id, Users users);
         Task<Users> UpdateAdminByID(int id, Users users);
         Task<Users> ForgottenPassword(int id, Users users);
-
-        Task<Users> GetUserByEmail(Users users);
         Task<bool> DeleteUsers(int id);
-
+        Task<Users> GetUserByEmail(string email);
         Task<bool> RegisterUsers(Users users);
         Task<string> ConfirmEmail(Users user, string token);
         Task<Users> AuthenticateUser(LoginUsers login);
