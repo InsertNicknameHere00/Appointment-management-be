@@ -122,6 +122,7 @@ namespace AppointmentAPI.Services
         public async Task<bool> ConfirmEmail(Users users, string token)
         {
             var result = await _repository.ConfirmUserEmail(users, token);
+
             return result;
 
         }
