@@ -153,7 +153,7 @@ namespace AppointmentAPI.Repository
             return "false";
         }
 
-        public async Task<string> GenerateToken(Users users)
+        public async Task<string> GenerateVerificationToken(Users users)
         {
             var existingUser = await _context.Users.FindAsync(users.UserID);
             if (existingUser != null)
@@ -161,6 +161,21 @@ namespace AppointmentAPI.Repository
                 existingUser.StartDate = DateTime.UtcNow;
                 existingUser.EndDate = DateTime.UtcNow.AddHours(24);
              existingUser.VerificationToken= Guid.NewGuid().ToString();
+                _context.Users.Update(users);
+                await _context.SaveChangesAsync();
+                return "true";
+            }
+            return "false";
+        }
+
+        public async Task<string> GenerateResetToken(Users users)
+        {
+            var existingUser = await _context.Users.FindAsync(users.UserID);
+            if (existingUser != null)
+            {
+                existingUser.StartDate = DateTime.UtcNow;
+                existingUser.EndDate = DateTime.UtcNow.AddHours(24);
+                existingUser.ResetToken = Guid.NewGuid().ToString();
                 _context.Users.Update(users);
                 await _context.SaveChangesAsync();
                 return "true";
