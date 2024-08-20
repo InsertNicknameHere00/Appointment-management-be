@@ -12,6 +12,8 @@ namespace AppointmentAPI.Repository
         Task<Users> UpdateAdminByID(int id, Users users);
         Task<Users> ForgottenPassword(Users users);
         Task<Users> GetUserByEmail(string email);
+        Task<string> GenerateResetToken(Users users);
+        Task<string> GenerateVerificationToken(Users users);
         Task<bool> DeleteUsers(int id);
 
         Task<bool> RegisterUsers(Users users);

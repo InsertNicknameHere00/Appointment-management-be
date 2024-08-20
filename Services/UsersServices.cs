@@ -83,8 +83,14 @@ namespace AppointmentAPI.Services
             return usersTemp;
         }
 
-        public async Task<string> GenerateToken() {
-            var tempToken = await _repository();
+        public async Task<string> GenerateResetToken(Users users) {
+            var tempToken = await _repository.GenerateResetToken(users);
+            return tempToken.ToString();
+        }
+
+        public async Task<string> GenerateVerificationToken(Users users)
+        {
+            var tempToken = await _repository.GenerateVerificationToken(users);
             return tempToken.ToString();
         }
 
@@ -105,7 +111,7 @@ namespace AppointmentAPI.Services
             var claims = new[]
             {
                 new Claim(ClaimTypes.Role, userInfo.Role.RoleName),
-                new Claim(JwtRegisteredClaimNames.NameId, userInfo.UserID?.ToString() ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.NameId, userInfo.UserID.ToString() ?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.PreferredUsername, userInfo.FirstName),
                 new Claim(JwtRegisteredClaimNames.Email, userInfo.Email)
 
