@@ -14,6 +14,6 @@ namespace AppointmentAPI.Repository
         Task<bool> DeleteUsers(int id);
 
         Task<bool> RegisterUsers(Users users);
-        Task<bool> ConfirmUserEmail(Users users, string token);
+        Task<string> ConfirmUserEmail(Users users, string token);
     }
 }

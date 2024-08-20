@@ -41,8 +41,14 @@ namespace AppointmentAPI.Controllers
             return Ok(userTemp);
         }
 
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetUserID([FromHeader] int userId) {
+        [HttpGet("ByEmail")]
+        public async Task<IActionResult> GetUserByEmail([FromBody] Users users) {
+            var userTemp = await _usersService.GetUserByEmail(users);
+            return Ok(userTemp);
+        }
+
+        [HttpGet("GetByID")]
+        public async Task<IActionResult> GetUserID([FromQuery] int userId) {
             var userTemp = await _usersService.GetUsersByID(userId);
             return Ok(userTemp);
         }
@@ -53,22 +59,22 @@ namespace AppointmentAPI.Controllers
             return Ok(userTemp);
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<IActionResult> RegisterUser([FromBody] Users users) {
             var userTemp = await _usersService.RegisterUsers(users);
             var token = _usersService.GenerateJSONWebToken(users);
-            var url = Url.Action("ConfirmEmail", "Users", new {users.Email, token });
-            
+            var url = Url.Action("ConfirmEmail", "Users", new { token });
+
             _emailRequest.ToEmail = users.Email;
             _emailRequest.Subject = "Email Verification";
-            _emailRequest.Body = "https://localhost:7158"+$"{url}";
+            _emailRequest.Body = "https://localhost:7158" + $"{url}";
 
             await _emailSendService.SendEmail(_emailRequest);
             return Ok(userTemp);
         }
 
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteUserID([FromHeader] int userId) {
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> DeleteUserID([FromQuery] int userId) {
             var userTemp = await _usersService.DeleteUsers(userId);
             return Ok(userTemp);
         }
@@ -118,14 +124,10 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPost("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail(Users users, string token)
+        public async Task<IActionResult> ConfirmEmail(Users users, [FromQuery] string token)
         {
-            var user = await _usersService.GetUsersByEmail(users.Email);
+            var user = await _usersService.GetUserByEmail(users);
             if (user == null || token == null)
-            {
-                return NotFound();
-            }
-            else if (user == null)
             {
                 return NotFound();
             }
@@ -133,9 +135,9 @@ namespace AppointmentAPI.Controllers
             {
                 token = token.Replace(" ", "+");
                 var result = await _usersService.ConfirmEmail(user, token);
-                if (result == true)
+                if (result.Equals(user))
                 {
-                    return Ok("Verified succeded");
+                    return Ok("Verification succeded");
                 }
                 else
                 {
