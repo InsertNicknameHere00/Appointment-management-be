@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -17,13 +18,16 @@ namespace AppointmentAPI.Services
         private readonly IUsersServiceRepository _repository;
         private readonly HaircutSalonDbContext _context;
         private readonly IConfiguration _configuration;
+        private EmailRequest _emailRequest = new EmailRequest();
+        private IEmailSendService _emailSendService;
 
 
-        public UsersServices(IUsersServiceRepository repository, HaircutSalonDbContext context, IConfiguration configuration)
+        public UsersServices(IUsersServiceRepository repository, HaircutSalonDbContext context, IConfiguration configuration, IEmailSendService emailSendService)
         {
             _repository = repository;
             _context = context;
             _configuration = configuration;
+            _emailSendService = emailSendService;
         }
 
         public async Task<List<Users>> GetAllUsers()
@@ -38,7 +42,8 @@ namespace AppointmentAPI.Services
             return users;
         }
 
-        public async Task<Users> UpdateUsers(int id, Users users) {
+        public async Task<Users> UpdateUsers(int id, Users users)
+        {
          return await _repository.UpdateUsers(id, users);
         }
 
@@ -65,20 +70,29 @@ namespace AppointmentAPI.Services
 
         public async Task<Users> ForgottenPassword(int id, Users users)
         {
-            var usersTemp = await _repository.ForgottenPassword(id, users);
+            var usersTemp = await _repository.ForgottenPassword(users);
             return usersTemp;
         }
 
 
         public async Task<bool> RegisterUsers(Users users) {
             bool usersTemp= await _repository.RegisterUsers(users);
+
+            var token = GenerateJSONWebToken(users);
+         
+            _emailRequest.ToEmail = users.Email;
+            _emailRequest.Subject = "Email Verification";
+            _emailRequest.Body = _configuration.GetSection("urls").Value + "/api/Users/ConfirmEmail?Email=" + users.Email+"&token="+token;
+            await _emailSendService.SendEmail(_emailRequest);
+
             return usersTemp;
         }
 
 
-        public async Task<Users> GetUsersByEmail(string email)
+        public async Task<Users> GetUserByEmail(string email)
         {
-            return await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
+            var usersTemp=await _repository.GetUserByEmail(email);
+            return usersTemp;
         }
 
         public async Task<Users> AuthenticateUser(LoginUsers login)
@@ -122,6 +136,7 @@ namespace AppointmentAPI.Services
         public async Task<bool> ConfirmEmail(Users users, string token)
         {
             var result = await _repository.ConfirmUserEmail(users, token);
+
             return result;
 
         }

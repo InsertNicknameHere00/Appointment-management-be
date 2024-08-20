@@ -2,6 +2,7 @@
 using AppointmentAPI.Entities;
 using AppointmentAPI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace AppointmentAPI.Repository
 {
@@ -15,6 +16,10 @@ namespace AppointmentAPI.Repository
 
         public async Task<List<Users>> GetAllUsers() {
             var usersTemp = await _context.Users.ToListAsync();
+            return usersTemp;
+        }
+        public async Task<Users> GetUserByEmail(string email) { 
+        var usersTemp = await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
             return usersTemp;
         }
 
@@ -93,15 +98,15 @@ namespace AppointmentAPI.Repository
             return true;
         }
 
-        public async Task<Users> ForgottenPassword(int id, Users users) {
-            var existingUser = await _context.Users.FindAsync(id);
+        public async Task<Users> ForgottenPassword(Users users) {
+            var existingUser = await RegisteredUserExists(users);
             if (existingUser != null)
             {
-                existingUser.PasswordHash = users.PasswordHash;
-                _context.Users.Update(existingUser);
+                users.PasswordHash = users.PasswordHash;
+                _context.Users.Update(users);
                 await _context.SaveChangesAsync();
             }
-            return existingUser;
+            return users;
         }
 
         public async Task<bool> RegisteredUserExists(Users users) {

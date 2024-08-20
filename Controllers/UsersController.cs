@@ -57,13 +57,6 @@ namespace AppointmentAPI.Controllers
         public async Task<IActionResult> RegisterUser([FromBody] Users users) {
             var userTemp = await _usersService.RegisterUsers(users);
 
-            var token = _usersService.GenerateJSONWebToken(users);
-            var url = Url.Action("ConfirmEmail", "Users", new {users.Email, token });
-
-            _emailRequest.ToEmail = users.Email;
-            _emailRequest.Subject = "Email Verification";
-            _emailRequest.Body = "https://localhost:7158"+$"{url}";
-            await _emailSendService.SendEmail(_emailRequest);
 
             return Ok(userTemp);
         }
@@ -121,7 +114,7 @@ namespace AppointmentAPI.Controllers
         [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail([FromQuery]string email, [FromQuery]string token)
         {
-            var user = await _usersService.GetUsersByEmail(email);
+            var user = await _usersService.GetUserByEmail(email);
             if (user == null || token == null)
             {
                 return NotFound();
