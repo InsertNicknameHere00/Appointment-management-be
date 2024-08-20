@@ -9,3 +9,4 @@ EndDate DateTime2,
 userId int FOREIGN KEY REFERENCES Users(UserID) not null,
 serviceId int FOREIGN KEY REFERENCES SalonService(serviceID) not null
 );	
+GO
