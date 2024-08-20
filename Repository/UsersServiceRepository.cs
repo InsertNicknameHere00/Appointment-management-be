@@ -19,8 +19,8 @@ namespace AppointmentAPI.Repository
             var usersTemp = await _context.Users.ToListAsync();
             return usersTemp;
         }
-        public async Task<Users> GetUserByEmail(Users users) { 
-        var usersTemp = await _context.Users.SingleOrDefaultAsync(x => x.Email == users.Email);
+        public async Task<Users> GetUserByEmail(string email) { 
+        var usersTemp = await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
             return usersTemp;
         }
 
