@@ -186,7 +186,7 @@ namespace AppointmentAPI.Repository
                 existingUser.StartDate = DateTime.UtcNow;
                 existingUser.EndDate = DateTime.UtcNow.AddHours(24);
              existingUser.VerificationToken= Guid.NewGuid().ToString();
-                _context.Users.Update(users);
+                _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -200,7 +200,7 @@ namespace AppointmentAPI.Repository
                 existingUser.StartDate = null;
                 existingUser.EndDate = null;
                 existingUser.VerificationToken = null;
-                _context.Users.Update(users);
+                _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -215,7 +215,7 @@ namespace AppointmentAPI.Repository
                 existingUser.StartDate = null;
                 existingUser.EndDate = null;
                 existingUser.ResetToken = null;
-                _context.Users.Update(users);
+                _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -230,7 +230,7 @@ namespace AppointmentAPI.Repository
                 existingUser.StartDate = DateTime.UtcNow;
                 existingUser.EndDate = DateTime.UtcNow.AddHours(24);
                 existingUser.ResetToken = Guid.NewGuid().ToString();
-                _context.Users.Update(users);
+                _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
                 return existingUser.ResetToken.ToString();
             }
