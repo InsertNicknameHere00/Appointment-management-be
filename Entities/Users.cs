@@ -8,10 +8,10 @@
 
     public class Users
     {
-        public Users()
+    /*    public Users()
         {
             this.Appointments = new List<Appointment>();
-        }
+        }*/
 
         [Key]
         public int? UserID { get; set; }
@@ -42,6 +42,6 @@
         [ForeignKey("RoleID")]
         public virtual Role Role { get; set; }
 
-        public virtual ICollection<Appointment> Appointments { get; set; }
+        //public virtual ICollection<Appointment> Appointments { get; set; }
     }
 }
