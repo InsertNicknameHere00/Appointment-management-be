@@ -8,12 +8,13 @@ namespace AppointmentAPI.Services
         Task<Users> AddUsers(Users users);
         Task<Users> UpdateUsers(int id, Users users);
         Task<Users> UpdateAdminByID(int id, Users users);
-        Task<Users> ForgottenPassword(int id, Users users);
+        Task<bool> ForgottenPassword(Users users);
         Task<bool> DeleteUsers(int id);
+        Task<bool> ChangePassword(Users users);
         Task<Users> GetUserByEmail(string email);
         Task<bool> RegisterUsers(Users users);
         Task<bool> ConfirmEmail(Users user, string token);
-        Task<bool> GenerateResetToken(Users users);
+        Task<string> GenerateResetToken(Users users);
         Task<bool> GenerateVerificationToken(Users users);
         Task<Users> AuthenticateUser(LoginUsers login);
         string GenerateJSONWebToken(Users user);

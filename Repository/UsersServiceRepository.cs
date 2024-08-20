@@ -99,15 +99,40 @@ namespace AppointmentAPI.Repository
             return true;
         }
 
-        public async Task<Users> ForgottenPassword(Users users) {
-            var existingUser = await RegisteredUserExists(users);
-            if (RegisteredUserExists(users).Result == false)
+        public async Task<bool> ForgottenPassword(Users users) {
+            var existingUser = await _context.Users.FindAsync(users.Email);
+            var tokenTemp= ResetTokenCheck(users.ResetToken, users);
+            if (existingUser != null && tokenTemp.Result==true)
             {
                 users.PasswordHash = users.PasswordHash;
                 _context.Users.Update(users);
                 await _context.SaveChangesAsync();
+                return true;
             }
-            return users;
+            return false;
+        }
+
+        public async Task<bool> ResetTokenCheck(string token, Users users) {
+            var tempToken = users.ResetToken;
+            var inputToken = token;
+            if (inputToken == tempToken)
+            {
+                return true;
+            }
+            return false;
+
+        }
+
+        public async Task<bool> VerificationTokenCheck(string token, Users users)
+        {
+            var tempToken = users.VerificationToken;
+            var inputToken = token;
+            if (inputToken == tempToken)
+            {
+                return true;
+            }
+            return false;
+
         }
 
         public async Task<bool> RegisteredUserExists(Users users) {
@@ -168,9 +193,38 @@ namespace AppointmentAPI.Repository
             return false;
         }
 
-        public async Task<bool> GenerateResetToken(Users users)
+        public async Task<bool> ClearVerificationToken(Users users) {
+            var existingUser = await _context.Users.FindAsync(users.Email);
+            if (existingUser != null)
+            {
+                existingUser.StartDate = null;
+                existingUser.EndDate = null;
+                existingUser.VerificationToken = null;
+                _context.Users.Update(users);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> ClearResetToken(Users users)
         {
             var existingUser = await _context.Users.FindAsync(users.Email);
+            if (existingUser != null)
+            {
+                existingUser.StartDate = null;
+                existingUser.EndDate = null;
+                existingUser.ResetToken = null;
+                _context.Users.Update(users);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<string> GenerateResetToken(Users users)
+        {
+            var existingUser = await _context.Users.FindAsync(users.UserID);
             if (existingUser != null)
             {
                 existingUser.StartDate = DateTime.UtcNow;
@@ -178,9 +232,9 @@ namespace AppointmentAPI.Repository
                 existingUser.ResetToken = Guid.NewGuid().ToString();
                 _context.Users.Update(users);
                 await _context.SaveChangesAsync();
-                return true;
+                return existingUser.ResetToken.ToString();
             }
-            return false;
+            return "Not found";
         }
     }
 

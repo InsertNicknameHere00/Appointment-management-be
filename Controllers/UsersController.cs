@@ -88,9 +88,23 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPost("ForgottenPassword")]
-        public async Task<IActionResult> ForgottenPassword([FromHeader] int userId, [FromBody] Users users)
+        public async Task<IActionResult> ForgottenPassword([FromQuery] string email, [FromQuery] string token, [FromBody] Users users)
         {
-            var userTemp = await _usersService.ForgottenPassword(userId, users);
+            var user = await _usersService.GetUserByEmail(email);
+            if (user == null || token == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var userTemp = await _usersService.ForgottenPassword(users);
+                return Ok(userTemp);
+            }
+        }
+
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromQuery] string email, Users users) {
+            var userTemp = await _usersService.ChangePassword(users);
             return Ok(userTemp);
         }
 

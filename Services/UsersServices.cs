@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using AppointmentAPI.Repository;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Common;
 
 namespace AppointmentAPI.Services
 {
@@ -68,17 +70,31 @@ namespace AppointmentAPI.Services
             return true;
         }
 
-        public async Task<Users> ForgottenPassword(int id, Users users)
+        public async Task<bool> ForgottenPassword(Users users)
         {
             var usersTemp = await _repository.ForgottenPassword(users);
+
             return usersTemp;
         }
 
+        public async Task<bool> ChangePassword(Users users) {
+            var userTemp=await _repository.GetUserByEmail(users.Email);
+            if (userTemp != null)
+            {
+                var token = GenerateResetToken(users);
+                _emailRequest.ToEmail = users.Email;
+                _emailRequest.Subject = "Email Verification";
+                _emailRequest.Body = _configuration.GetSection("urls").Value + "/api/Users/ForgottenPassword?Email=" + users.Email + "&token=" + token;
+                await _emailSendService.SendEmail(_emailRequest);
+                return true;
+            }
+            return false;
+        }
 
         public async Task<bool> RegisterUsers(Users users) {
             bool usersTemp= await _repository.RegisterUsers(users);
 
-            var token = GenerateJSONWebToken(users);
+            var token = GenerateVerificationToken(users);
          
             _emailRequest.ToEmail = users.Email;
             _emailRequest.Subject = "Email Verification";
@@ -95,7 +111,7 @@ namespace AppointmentAPI.Services
             return usersTemp;
         }
 
-        public async Task<bool> GenerateResetToken(Users users) {
+        public async Task<string> GenerateResetToken(Users users) {
             var tempToken = await _repository.GenerateResetToken(users);
             return tempToken;
         }
