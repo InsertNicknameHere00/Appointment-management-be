@@ -39,6 +39,11 @@ namespace AppointmentAPI.Repository
             return await _context.Orders.FindAsync(id);
         }
 
+        public List<OrderItem> GetOrderItemsByOrderId(int orderId)
+        {
+           return _context.OrderItem.Where(o => o.OrderId == orderId).ToList();
+        }
+
         
     }
 }

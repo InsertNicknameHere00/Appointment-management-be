@@ -4,6 +4,7 @@
     {
         Pending = 1,
         Processing = 2,
-        Shipped = 3
+        Shipped = 3,
+        Cancelled=4
     }
 }

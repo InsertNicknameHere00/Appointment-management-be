@@ -16,7 +16,7 @@ namespace AppointmentAPI.Controllers
         private readonly IOrderService orderService;
         private readonly ILogger<ShoppingCartController> logger;
 
-        public ShoppingCartController(IShoppingCartService shoppingCartService, ILogger<ShoppingCartController> logger,IOrderService _orderService)
+        public ShoppingCartController(IShoppingCartService shoppingCartService, ILogger<ShoppingCartController> logger, IOrderService _orderService)
         {
             this.shoppingCartService = shoppingCartService;
             this.orderService = _orderService;
@@ -29,7 +29,7 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var userId = GetUserId();
-                await shoppingCartService.AddProduct(userId,cartItem.Product, cartItem.Quantity);
+                await shoppingCartService.AddProduct(userId, cartItem.Product, cartItem.Quantity);
                 logger.LogInformation("Product is successfully added");
                 return Ok(cartItem);
             }
@@ -54,22 +54,30 @@ namespace AppointmentAPI.Controllers
                 var cartItems = await shoppingCartService.GetCartItems(userId);
 
                 if (!cartItems.Any())
-                 {
-                     return BadRequest("Cart is empty.");
-                 }
+                {
+                    return BadRequest("Cart is empty.");
+                }
 
-                var productName = orderService.CheckQuantity(cartItems);
-                if (productName == "")
+                var insufficientStock = orderService.CheckQuantity(cartItems);
+                if (insufficientStock.Count() == 0)
                 {
                     var result = await orderService.CreateOrderAsync(userId, cartItems, address);
                     await shoppingCartService.ClearCart(userId);
                     logger.LogInformation("Order is successfully created");
+                    await orderService.SendEmail(result);
                     return Ok(result);
                 }
                 else
                 {
-                    logger.LogInformation(productName + " not enough quantity.");
-                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = productName  + " not enough quantity" });
+                    var msg = "";
+                    foreach (var product in insufficientStock)
+                    {
+                        logger.LogInformation(product.ProductName + " not enough quantity. Available: " + product.Quantity + " items.");
+                        msg += product.ProductName + " not enough quantity. Available: " + product.Quantity + " items. \n ";
+                        //return StatusCode(StatusCodes.Status500InternalServerError, new { message = product.ProductName + " not enough quantity. Available: " + product.Quantity + " items." });
+                    }
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = msg });
+
                 }
 
             }
@@ -92,7 +100,7 @@ namespace AppointmentAPI.Controllers
             try
             {
                 var userId = GetUserId();
-                var result=await shoppingCartService.RemoveProduct(userId,productId);
+                var result = await shoppingCartService.RemoveProduct(userId, productId);
                 logger.LogInformation("Product is deleted successfully");
                 return Ok(result);
             }
@@ -155,13 +163,14 @@ namespace AppointmentAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateRevieOrder([FromHeader] int id, [FromBody] Order _order)
+        public async Task<ActionResult> UpdateOrder([FromHeader] int id, [FromBody] Order _order)
         {
             try
             {
-                var review = await orderService.UpdateOrder(id, _order);
+                var order = await orderService.UpdateOrder(id, _order);
                 logger.LogInformation("The order is successfully updated");
-                return Ok(review);
+                await orderService.SendEmail(order);
+                return Ok(order);
             }
             catch (KeyNotFoundException ex)
             {
@@ -174,6 +183,29 @@ namespace AppointmentAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "We are currently unable to process your request!" });
             }
         }
+
+        [HttpPut("order/{id}")]
+        public async Task<ActionResult> CancelOrder([FromHeader] int id, [FromBody] Order _order)
+        {
+            try
+            {
+                var order = await orderService.CancelOrder(id, _order);
+                logger.LogInformation("The order is successfully cancelled.");
+                await orderService.SendEmail(order);
+                return Ok(order);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogInformation("Order is not found");
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Server error");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "We are currently unable to process your request!" });
+            }
+        }
+
 
 
         private int GetUserId()

@@ -1,4 +1,5 @@
 ﻿using AppointmentAPI.Entities.Enums;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,7 +10,7 @@ namespace AppointmentAPI.Entities
         [Key]
         public int OrderId { get; set; }
 
-        [ForeignKey("userId")]
+        //[ForeignKey("userId")]
         public int UserId { get; set; }
         public DateTime OrderDate { get; set; }
         [Required]
@@ -18,5 +19,10 @@ namespace AppointmentAPI.Entities
         [Required]
         public OrderStatus OrderStatus { get; set; }
         public List<OrderItem> OrderItems { get; set; }
+
+        /* ForeignKey[("UserId")]
+         virtual Users User { get; set; }*/
+        [ForeignKey("UserId")]
+        public virtual Users User { get; set; }
     }
 }
