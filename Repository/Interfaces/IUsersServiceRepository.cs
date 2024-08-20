@@ -10,9 +10,11 @@ namespace AppointmentAPI.Repository
         Task<Users> AddUsers(Users users);
         Task<Users> UpdateUsers(int id, Users users);
         Task<Users> UpdateAdminByID(int id, Users users);
-        Task<Users> ForgottenPassword(int id, Users users);
+        Task<Users> ForgottenPassword(Users users);
+        Task<Users> GetUserByEmail(string email);
         Task<bool> DeleteUsers(int id);
 
         Task<bool> RegisterUsers(Users users);
+        Task<bool> ConfirmUserEmail(Users users, string token);
     }
 }
