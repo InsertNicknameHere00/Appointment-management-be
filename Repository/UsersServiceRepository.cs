@@ -141,19 +141,19 @@ namespace AppointmentAPI.Repository
             return false;
         }
 
-        public async Task<string> ConfirmUserEmail(Users users, string token)
+        public async Task<bool> ConfirmUserEmail(Users users, string token)
         {
             if (RegisteredUserExists(users).Result == false)
             {
                 users.VerificationStatus = "Verified";
                 _context.Users.Update(users);
                 await _context.SaveChangesAsync();
-                return users.Email;
+                return true;
             }
-            return "false";
+            return false;
         }
 
-        public async Task<string> GenerateVerificationToken(Users users)
+        public async Task<bool> GenerateVerificationToken(Users users)
         {
             var existingUser = await _context.Users.FindAsync(users.Email);
             if (existingUser != null)
@@ -163,12 +163,12 @@ namespace AppointmentAPI.Repository
              existingUser.VerificationToken= Guid.NewGuid().ToString();
                 _context.Users.Update(users);
                 await _context.SaveChangesAsync();
-                return "true";
+                return true;
             }
-            return "false";
+            return false;
         }
 
-        public async Task<string> GenerateResetToken(Users users)
+        public async Task<bool> GenerateResetToken(Users users)
         {
             var existingUser = await _context.Users.FindAsync(users.Email);
             if (existingUser != null)
@@ -178,9 +178,9 @@ namespace AppointmentAPI.Repository
                 existingUser.ResetToken = Guid.NewGuid().ToString();
                 _context.Users.Update(users);
                 await _context.SaveChangesAsync();
-                return "true";
+                return true;
             }
-            return "false";
+            return false;
         }
     }
 

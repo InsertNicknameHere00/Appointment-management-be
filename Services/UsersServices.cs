@@ -95,15 +95,15 @@ namespace AppointmentAPI.Services
             return usersTemp;
         }
 
-        public async Task<string> GenerateResetToken(Users users) {
+        public async Task<bool> GenerateResetToken(Users users) {
             var tempToken = await _repository.GenerateResetToken(users);
-            return tempToken.ToString();
+            return tempToken;
         }
 
-        public async Task<string> GenerateVerificationToken(Users users)
+        public async Task<bool> GenerateVerificationToken(Users users)
         {
             var tempToken = await _repository.GenerateVerificationToken(users);
-            return tempToken.ToString();
+            return tempToken;
         }
 
         public async Task<Users> AuthenticateUser(LoginUsers login)
@@ -144,7 +144,7 @@ namespace AppointmentAPI.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<string> ConfirmEmail(Users users, string token)
+        public async Task<bool> ConfirmEmail(Users users, string token)
         {
             var result = await _repository.ConfirmUserEmail(users, token);
 
