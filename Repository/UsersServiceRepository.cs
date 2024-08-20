@@ -24,6 +24,12 @@ namespace AppointmentAPI.Repository
             return users;
         }
 
+        public Users GetUserByID(int id)
+        {
+            var user = _context.Users.Find(id);
+            return user;
+        }
+
         public async Task<Users> AddUsers(Users users)
         {
             Users newUser = new Users();
@@ -123,6 +129,18 @@ namespace AppointmentAPI.Repository
                 account.RoleID = 2;
                 account.VerificationStatus = "Pending ...";
                 _context.Users.Add(account);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> ConfirmUserEmail(Users users, string token)
+        {
+            if (RegisteredUserExists(users).Result == false)
+            {
+                users.VerificationStatus = "Verified";
+                _context.Users.Update(users);
                 await _context.SaveChangesAsync();
                 return true;
             }

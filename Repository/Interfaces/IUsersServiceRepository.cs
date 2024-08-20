@@ -6,6 +6,7 @@ namespace AppointmentAPI.Repository
     {
         Task<List<Users>> GetAllUsers();
         Task<Users> GetUsersByID(int id);
+        Users GetUserByID(int id);
         Task<Users> AddUsers(Users users);
         Task<Users> UpdateUsers(int id, Users users);
         Task<Users> UpdateAdminByID(int id, Users users);
@@ -13,5 +14,6 @@ namespace AppointmentAPI.Repository
         Task<bool> DeleteUsers(int id);
 
         Task<bool> RegisterUsers(Users users);
+        Task<bool> ConfirmUserEmail(Users users, string token);
     }
 }
