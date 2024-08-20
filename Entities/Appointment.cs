@@ -22,7 +22,7 @@
         public int UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public virtual Users User { get; set; } = null!;
+        public Users User { get; set; } = null!;
 
         public int? ClientId { get; set; }
 
@@ -30,6 +30,6 @@
         public int ServiceId { get; set; }
 
         [ForeignKey(nameof(ServiceId))]
-        public virtual SalonService Service { get; set; } = null!;
+        public SalonService Service { get; set; } = null!;
     }
 }

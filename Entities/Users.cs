@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data;
+    using System.Text.Json.Serialization;
 
     public class Users
     {
@@ -40,6 +41,7 @@
         [ForeignKey("RoleID")]
         public virtual Role Role { get; set; }
 
-        public virtual ICollection<Appointment> Appointments { get; set; }
+        [JsonIgnore]
+        public ICollection<Appointment> Appointments { get; set; } 
     }
 }
