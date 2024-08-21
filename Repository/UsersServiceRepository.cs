@@ -1,8 +1,10 @@
 ﻿using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
 using AppointmentAPI.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System;
 
 namespace AppointmentAPI.Repository
 {
@@ -98,15 +100,42 @@ namespace AppointmentAPI.Repository
             return true;
         }
 
-        public async Task<Users> ForgottenPassword(Users users) {
-            var existingUser = await RegisteredUserExists(users);
-            if (existingUser != null)
+        public async Task<bool> ForgottenPassword(Users users) {
+            var existingUser = await GetUserByEmail(users.Email);
+            var tokenTemp= ResetTokenCheck(users.ResetToken, users);
+            if (existingUser != null && tokenTemp.Result==true)
             {
-                users.PasswordHash = users.PasswordHash;
-                _context.Users.Update(users);
+                Random random=new Random();
+                existingUser.PasswordHash = random.Next(11).ToString();
+                _context.Users.Update(existingUser);
+                ClearResetToken(existingUser);
                 await _context.SaveChangesAsync();
+                return true;
             }
-            return users;
+            return false;
+        }
+
+        public async Task<bool> ResetTokenCheck(string token, Users users) {
+            var tempToken = users.ResetToken;
+            var inputToken = token;
+            if (inputToken == tempToken)
+            {
+                return true;
+            }
+            return false;
+
+        }
+
+        public async Task<bool> VerificationTokenCheck(string token, Users users)
+        {
+            var tempToken = users.VerificationToken;
+            var inputToken = token;
+            if (inputToken == tempToken)
+            {
+                return true;
+            }
+            return false;
+
         }
 
         public async Task<bool> RegisteredUserExists(Users users) {
@@ -119,25 +148,29 @@ namespace AppointmentAPI.Repository
                 return true;
                     }
         }
-        public async Task<bool> RegisterUsers(Users users)
+        public async Task<string> RegisterUsers(Users users)
         {
 
             if (RegisteredUserExists(users).Result==true)
             {
+                Random random = new Random();
+
                 Users account = new Users();
                 account.FirstName = users.FirstName;
                 account.LastName = users.LastName;
                 account.PasswordHash = users.PasswordHash;
                 account.Email = users.Email;
                 account.PhoneNumber = users.PhoneNumber;
-                //Temporary leaving RoleID hardcoded to 1, cause we lack RoleID 2 in table
+                account.StartDate = DateTime.UtcNow;
+                account.EndDate = DateTime.UtcNow.AddHours(24);
+                account.VerificationToken = random.Next(6).ToString();
                 account.RoleID = 2;
                 account.VerificationStatus = "Pending ...";
                 _context.Users.Add(account);
                 await _context.SaveChangesAsync();
-                return true;
+                return account.VerificationToken;
             }
-            return false;
+            return "Not found";
         }
 
         public async Task<bool> ConfirmUserEmail(Users users, string token)
@@ -146,10 +179,50 @@ namespace AppointmentAPI.Repository
             {
                 users.VerificationStatus = "Verified";
                 _context.Users.Update(users);
+                ClearVerificationToken(users);
                 await _context.SaveChangesAsync();
                 return true;
             }
             return false;
+        }
+
+        public async Task<bool> ClearVerificationToken(Users users) {
+            var existingUser = await GetUserByEmail(users.Email);
+            if (existingUser != null)
+            {
+                existingUser.StartDate = null;
+                existingUser.EndDate = null;
+                existingUser.VerificationToken = null;
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> ClearResetToken(Users users)
+        {
+            var existingUser = await GetUserByEmail(users.Email);
+            if (existingUser != null)
+            {
+                existingUser.StartDate = null;
+                existingUser.EndDate = null;
+                existingUser.ResetToken = null;
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<string> GenerateResetToken(Users users)
+        {
+            var existingUser = await GetUserByEmail(users.Email);
+            if (existingUser != null)
+            {
+                Random random = new Random();
+                existingUser.StartDate = DateTime.UtcNow;
+                existingUser.EndDate = DateTime.UtcNow.AddHours(24);
+                existingUser.ResetToken = random.Next(6).ToString();
+                return existingUser.ResetToken.ToString();
+            }
+            return "Not found";
         }
     }
 

@@ -41,8 +41,14 @@ namespace AppointmentAPI.Controllers
             return Ok(userTemp);
         }
 
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetUserID([FromHeader] int userId) {
+        [HttpGet("ByEmail")]
+        public async Task<IActionResult> GetUserByEmail([FromBody] Users users) {
+            var userTemp = await _usersService.GetUserByEmail(users.Email);
+            return Ok(userTemp);
+        }
+
+        [HttpGet("GetByID")]
+        public async Task<IActionResult> GetUserID([FromQuery] int userId) {
             var userTemp = await _usersService.GetUsersByID(userId);
             return Ok(userTemp);
         }
@@ -53,14 +59,14 @@ namespace AppointmentAPI.Controllers
             return Ok(userTemp);
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<IActionResult> RegisterUser([FromBody] Users users) {
             var userTemp = await _usersService.RegisterUsers(users);
             return Ok(userTemp);
         }
 
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteUserID([FromHeader] int userId) {
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> DeleteUserID([FromQuery] int userId) {
             var userTemp = await _usersService.DeleteUsers(userId);
             return Ok(userTemp);
         }
@@ -79,10 +85,24 @@ namespace AppointmentAPI.Controllers
             return Ok(userTemp);
         }
 
-        [HttpPost("ForgottenPassword")]
-        public async Task<IActionResult> ForgottenPassword([FromHeader] int userId, [FromBody] Users users)
+        [HttpGet("ForgottenPassword")]
+        public async Task<IActionResult> ForgottenPassword([FromQuery] string email, [FromQuery] string token)
         {
-            var userTemp = await _usersService.ForgottenPassword(userId, users);
+            var user = await _usersService.GetUserByEmail(email);
+            if (user == null || token == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var userTemp = await _usersService.ForgottenPassword(user);
+                return Ok(userTemp);
+            }
+        }
+
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromQuery] string email, Users users) {
+            var userTemp = await _usersService.ChangePassword(users);
             return Ok(userTemp);
         }
 
@@ -117,17 +137,13 @@ namespace AppointmentAPI.Controllers
             {
                 return NotFound();
             }
-            else if (user == null)
-            {
-                return NotFound();
-            }
             else
             {
                 token = token.Replace(" ", "+");
                 var result = await _usersService.ConfirmEmail(user, token);
-                if (result == true)
+                if (result.Equals(user))
                 {
-                    return Ok("Verified succeded");
+                    return Ok("Verification succeded");
                 }
                 else
                 {
