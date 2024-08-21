@@ -37,7 +37,7 @@ namespace AppointmentAPI.Services
                 TotalPrice = cartItems.Sum(ci => ci.Product.Price * ci.Quantity),
                 OrderAddress = address,
                 OrderStatus = Entities.Enums.OrderStatus.Pending,
-                //PromoCodeID = 0
+                PromoCodeID = null
             };
             await _orderRepository.AddOrder(order);
 

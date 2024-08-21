@@ -11,10 +11,12 @@ namespace AppointmentAPI.Services
     public class PromoCodeRepository : IPromoCodeRepository
     {
         private readonly HaircutSalonDbContext _context;
+        private readonly IOrderRepository _orderRepository;
 
-        public PromoCodeRepository(HaircutSalonDbContext context)
+        public PromoCodeRepository(HaircutSalonDbContext context, IOrderRepository orderRepository)
         {
             _context = context;
+            _orderRepository = orderRepository;
         }
 
         public async Task<List<string>> GeneratePromoCodes(int numberOfCodes, int discountPercentage)
@@ -52,7 +54,7 @@ namespace AppointmentAPI.Services
             if (order == null)
                 throw new Exception("Order not found");
 
-           /*if (order.PromoCodeID != null)
+           if (order.PromoCodeID != null)
                 throw new Exception("A promo code has already been applied to this order");
             var promo = await _context.PromoCodes
                                 .Where(pc => pc.Code == promoCode && pc.IsActive && (pc.ExpiryDate == null || pc.ExpiryDate >= DateTime.UtcNow))
@@ -60,15 +62,18 @@ namespace AppointmentAPI.Services
             if (promo == null)
                 throw new Exception("Promo code is invalid or expired");
 
-            var discount = order.TotalPrice * (promo.DiscountPercentage / 100);
+            Console.WriteLine(order.TotalPrice);
+            var discount = order.TotalPrice * ((decimal)promo.DiscountPercentage / 100);
+            Console.WriteLine(discount);
             var discountedPrice = order.TotalPrice - discount;
+            Console.WriteLine(discountedPrice);
             order.TotalPrice = discountedPrice;
             order.PromoCodeID = promo.PromoCodeID;
-
+            await _orderRepository.UpdateOrder(order);
             await _context.SaveChangesAsync();
 
-            return discountedPrice;*/
-            return 5;
+            return discountedPrice;
+            //return 5;
         }
 
     }
