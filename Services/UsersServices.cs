@@ -177,7 +177,7 @@ namespace AppointmentAPI.Services
                 user.Picture = imageUrl;
             }
 
-            this._repository.UpdateUsers(userId, user);
+            await this._repository.UpdateUsers(userId, user);
         }
     }
 

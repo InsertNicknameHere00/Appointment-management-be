@@ -10,6 +10,7 @@ namespace AppointmentAPI.Repository
 {
     public class UsersServiceRepository : IUsersServiceRepository
     {
+        public const string DefaultImageForNewUser = "https://res.cloudinary.com/dir790ipb/image/upload/v1724246218/user_images/huv5uvbeknoccwofnkuy.png";
         private readonly HaircutSalonDbContext _context;
         public UsersServiceRepository(HaircutSalonDbContext context)
         {
@@ -46,6 +47,7 @@ namespace AppointmentAPI.Repository
             newUser.PasswordHash = users.PasswordHash;
             newUser.PhoneNumber = users.PhoneNumber;
             newUser.RoleID = users.RoleID;
+            newUser.Picture = DefaultImageForNewUser;
             newUser.VerificationStatus = users.VerificationStatus;
 
             _context.Users.Add(newUser);
