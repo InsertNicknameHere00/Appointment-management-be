@@ -62,8 +62,6 @@ namespace AppointmentAPI.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterUser([FromBody] Users users) {
             var userTemp = await _usersService.RegisterUsers(users);
-
-
             return Ok(userTemp);
         }
 

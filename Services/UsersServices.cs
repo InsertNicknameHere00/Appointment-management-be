@@ -103,6 +103,7 @@ namespace AppointmentAPI.Services
             _emailRequest.Subject = "Email Verification";
             _emailRequest.Body = _configuration.GetSection("urls").Value + "/api/Users/ConfirmEmail?Email=" + users.Email+"&token="+token;
             await _emailSendService.SendEmail(_emailRequest);
+            }
 
             return usersTemp;
         }

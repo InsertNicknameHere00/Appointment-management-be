@@ -7,3 +7,4 @@ userID int foreign key references Users(UserID) not null,
 serviceID int foreign key references AdminServices(Id),
 reviewDescription varchar(255)
 );
+GO
