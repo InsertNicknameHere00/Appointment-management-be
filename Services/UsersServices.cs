@@ -76,7 +76,7 @@ namespace AppointmentAPI.Services
 
 
         public async Task<bool> RegisterUsers(Users users) {
-            bool usersTemp= await _repository.RegisterUsers(users);
+            bool usersTemp = await _repository.RegisterUsers(users);
 
             var token = GenerateJSONWebToken(users);
 
