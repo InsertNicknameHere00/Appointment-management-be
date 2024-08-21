@@ -9,3 +9,4 @@ Price decimal NOT NULL,
 Quantity int NULL,
 ProductImage varchar(255) NULL
 )
+GO

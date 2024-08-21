@@ -1,7 +1,11 @@
+USE haircutSalonDB;
+GO
+
 CREATE TABLE OrderItem(
 OrderItemId int IDENTITY(1,1) PRIMARY KEY NOT NULL,
 OrderId int FOREIGN KEY REFERENCES Orders(OrderID) NOT NULL,
 ProductId int FOREIGN KEY REFERENCES Product(ProductID) NOT NULL,
 QUANTITY INT NOT NULL,
 Price money NOT NULL
-)
+);
+GO
