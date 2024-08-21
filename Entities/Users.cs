@@ -15,35 +15,43 @@
         }
 
         [Key]
-        public int? UserID { get; set; }
+        public int UserID { get; set; }
 
         [Required]
-        public string? FirstName { get; set; }
+        public string FirstName { get; set; }
 
         [Required]
-        public string? LastName { get; set; }
+        public string LastName { get; set; }
 
         [Required]
-        public string? Email { get; set; }
+        public string Email { get; set; }
 
         [Required]
-        public string? PasswordHash { get; set; }
+        public string PasswordHash { get; set; }
 
         [Required]
         public string PhoneNumber { get; set; }
 
         [Required]
-        public int? RoleID { get; set; }
+        public int RoleID { get; set; }
 
         [Required]
-        public string? VerificationStatus { get; set; }
+        public string VerificationStatus { get; set; }
+
+        public string? VerificationToken { get; set; }
 
         public string? ResetToken { get; set; }
 
-        [ForeignKey("RoleID")]
-        public virtual Role Role { get; set; }
+        public string? Title { get; set; }
 
         public string? Picture { get; set; }
+
+        public DateTime? StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
+
+        [ForeignKey("RoleID")]
+        public virtual Role Role { get; set; }
 
         //[NotMapped]
         //public IFormFile? NewImage { get; set; }

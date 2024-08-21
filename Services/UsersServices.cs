@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using AppointmentAPI.Repository;
 using AppointmentAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Common;
 
 namespace AppointmentAPI.Services
 {
@@ -69,24 +71,39 @@ namespace AppointmentAPI.Services
             return true;
         }
 
-        public async Task<Users> ForgottenPassword(int id, Users users)
+        public async Task<bool> ForgottenPassword(Users users)
         {
             var usersTemp = await _repository.ForgottenPassword(users);
+
             return usersTemp;
         }
 
+            public async Task<bool> ChangePassword(Users users) {
+                var userTemp=await _repository.GetUserByEmail(users.Email);
+            if (userTemp != null)
+            {
+                var token = await GenerateResetToken(users);
+                if (token != null)
+                {
+                    _emailRequest.ToEmail = users.Email;
+                    _emailRequest.Subject = "Forgotten Password";
+                    _emailRequest.Body = _configuration.GetSection("urls").Value + "/api/Users/ForgottenPassword?Email=" + users.Email + "&token=" + token;
+                    await _emailSendService.SendEmail(_emailRequest);
+                    return true;
+                }
+            }
+                return false;
+            }
 
-        public async Task<bool> RegisterUsers(Users users) {
-            bool usersTemp = await _repository.RegisterUsers(users);
+        public async Task<string> RegisterUsers(Users users) {
+            string usersTemp= await _repository.RegisterUsers(users);
 
-            var token = GenerateJSONWebToken(users);
-
-            if (usersTemp == true) { 
+            var token = usersTemp;
+         
             _emailRequest.ToEmail = users.Email;
             _emailRequest.Subject = "Email Verification";
             _emailRequest.Body = _configuration.GetSection("urls").Value + "/api/Users/ConfirmEmail?Email=" + users.Email+"&token="+token;
             await _emailSendService.SendEmail(_emailRequest);
-            }
 
             return usersTemp;
         }
@@ -96,6 +113,11 @@ namespace AppointmentAPI.Services
         {
             var usersTemp=await _repository.GetUserByEmail(email);
             return usersTemp;
+        }
+
+        public async Task<string> GenerateResetToken(Users users) {
+            var tempToken = await _repository.GenerateResetToken(users);
+            return tempToken;
         }
 
         public async Task<Users> AuthenticateUser(LoginUsers login)
@@ -115,7 +137,7 @@ namespace AppointmentAPI.Services
             var claims = new[]
             {
                 new Claim(ClaimTypes.Role, userInfo.Role.RoleName),
-                new Claim(JwtRegisteredClaimNames.NameId, userInfo.UserID?.ToString() ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.NameId, userInfo.UserID.ToString() ?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.PreferredUsername, userInfo.FirstName),
                 new Claim(JwtRegisteredClaimNames.Email, userInfo.Email)
 
