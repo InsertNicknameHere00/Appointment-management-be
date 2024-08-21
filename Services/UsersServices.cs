@@ -8,7 +8,6 @@ using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
 using AppointmentAPI.Repository;
 using AppointmentAPI.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 

@@ -16,8 +16,6 @@ using System.Text.Json.Serialization;
 
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using dotenv.net;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
