@@ -18,7 +18,7 @@ namespace AppointmentAPI.Repository
 
         Task<bool> VerificationTokenCheck(string token, Users users);
 
-        Task<bool> RegisterUsers(Users users);
+        Task<string> RegisterUsers(Users users);
         Task<bool> ConfirmUserEmail(Users users, string token);
     }
 }

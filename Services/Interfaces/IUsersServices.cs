@@ -12,7 +12,7 @@ namespace AppointmentAPI.Services
         Task<bool> DeleteUsers(int id);
         Task<bool> ChangePassword(Users users);
         Task<Users> GetUserByEmail(string email);
-        Task<bool> RegisterUsers(Users users);
+        Task<string> RegisterUsers(Users users);
         Task<bool> ConfirmEmail(Users user, string token);
         Task<string> GenerateResetToken(Users users);
         Task<Users> AuthenticateUser(LoginUsers login);

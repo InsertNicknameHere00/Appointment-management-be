@@ -106,8 +106,9 @@ namespace AppointmentAPI.Repository
             if (existingUser != null && tokenTemp.Result==true)
             {
                 Random random=new Random();
-                users.PasswordHash = random.Next(11).ToString();
-                _context.Users.Update(users);
+                existingUser.PasswordHash = random.Next(11).ToString();
+                _context.Users.Update(existingUser);
+                ClearResetToken(existingUser);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -147,7 +148,7 @@ namespace AppointmentAPI.Repository
                 return true;
                     }
         }
-        public async Task<bool> RegisterUsers(Users users)
+        public async Task<string> RegisterUsers(Users users)
         {
 
             if (RegisteredUserExists(users).Result==true)
@@ -162,14 +163,14 @@ namespace AppointmentAPI.Repository
                 account.PhoneNumber = users.PhoneNumber;
                 account.StartDate = DateTime.UtcNow;
                 account.EndDate = DateTime.UtcNow.AddHours(24);
-                account.ResetToken = random.Next(6).ToString();
+                account.VerificationToken = random.Next(6).ToString();
                 account.RoleID = 2;
                 account.VerificationStatus = "Pending ...";
                 _context.Users.Add(account);
                 await _context.SaveChangesAsync();
-                return true;
+                return account.VerificationToken;
             }
-            return false;
+            return "Not found";
         }
 
         public async Task<bool> ConfirmUserEmail(Users users, string token)
@@ -178,6 +179,7 @@ namespace AppointmentAPI.Repository
             {
                 users.VerificationStatus = "Verified";
                 _context.Users.Update(users);
+                ClearVerificationToken(users);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -185,14 +187,12 @@ namespace AppointmentAPI.Repository
         }
 
         public async Task<bool> ClearVerificationToken(Users users) {
-            var existingUser = await _context.Users.FindAsync(users.Email);
+            var existingUser = await GetUserByEmail(users.Email);
             if (existingUser != null)
             {
                 existingUser.StartDate = null;
                 existingUser.EndDate = null;
                 existingUser.VerificationToken = null;
-                _context.Users.Update(existingUser);
-                await _context.SaveChangesAsync();
                 return true;
             }
             return false;
@@ -200,14 +200,12 @@ namespace AppointmentAPI.Repository
 
         public async Task<bool> ClearResetToken(Users users)
         {
-            var existingUser = await _context.Users.FindAsync(users.Email);
+            var existingUser = await GetUserByEmail(users.Email);
             if (existingUser != null)
             {
                 existingUser.StartDate = null;
                 existingUser.EndDate = null;
                 existingUser.ResetToken = null;
-                _context.Users.Update(existingUser);
-                await _context.SaveChangesAsync();
                 return true;
             }
             return false;
@@ -222,8 +220,6 @@ namespace AppointmentAPI.Repository
                 existingUser.StartDate = DateTime.UtcNow;
                 existingUser.EndDate = DateTime.UtcNow.AddHours(24);
                 existingUser.ResetToken = random.Next(6).ToString();
-                _context.Users.Update(existingUser);
-                await _context.SaveChangesAsync();
                 return existingUser.ResetToken.ToString();
             }
             return "Not found";

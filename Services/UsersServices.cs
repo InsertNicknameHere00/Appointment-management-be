@@ -94,10 +94,10 @@ namespace AppointmentAPI.Services
                 return false;
             }
 
-        public async Task<bool> RegisterUsers(Users users) {
-            bool usersTemp= await _repository.RegisterUsers(users);
+        public async Task<string> RegisterUsers(Users users) {
+            string usersTemp= await _repository.RegisterUsers(users);
 
-            var token = users.VerificationToken;
+            var token = usersTemp;
          
             _emailRequest.ToEmail = users.Email;
             _emailRequest.Subject = "Email Verification";
