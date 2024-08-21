@@ -112,14 +112,10 @@ builder.Services.AddSwaggerGen(c => {
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-IConfiguration configuration = builder.Configuration;
-Account claudinaryInformation = new(
-                configuration["Cloudinary:CloudName"],
-                configuration["Cloudinary:ApiKey"],
-                configuration["Cloudinary:ApiSecret"]);
-Cloudinary cloudinary = new(claudinaryInformation);
+Cloudinary cloudinary = new Cloudinary("cloudinary://711219649417158:lm7hVdhBwzvcwlbUnOQEyoTgywo@dir790ipb");
+cloudinary.Api.Secure = true;
 builder.Services.AddSingleton(cloudinary);
-builder.Services.AddSingleton(configuration);
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 //builder.Services.AddControllers().AddJsonOptions(x =>
 //                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);

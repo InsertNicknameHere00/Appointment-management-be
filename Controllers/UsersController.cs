@@ -119,10 +119,6 @@ namespace AppointmentAPI.Controllers
             {
                 return NotFound();
             }
-            else if (user == null)
-            {
-                return NotFound();
-            }
             else
             {
                 token = token.Replace(" ", "+");
@@ -138,5 +134,18 @@ namespace AppointmentAPI.Controllers
             }
         }
 
+        [HttpPost("editImage")]
+        public async Task<IActionResult> EditAvatarConfirm([FromQuery] int id, IFormFile formFile, string fileName)
+        {
+            try
+            {
+                await this._usersService.UpdateAvatarAsync(id, formFile, fileName);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
+            }
+        }
     }
 }

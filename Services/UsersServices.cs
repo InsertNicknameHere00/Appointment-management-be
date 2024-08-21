@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AppointmentAPI.Data;
 using AppointmentAPI.Entities;
 using AppointmentAPI.Repository;
+using AppointmentAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -20,14 +21,15 @@ namespace AppointmentAPI.Services
         private readonly IConfiguration _configuration;
         private EmailRequest _emailRequest = new EmailRequest();
         private IEmailSendService _emailSendService;
+        private readonly ICloudinaryService _cloudinaryService;
 
-
-        public UsersServices(IUsersServiceRepository repository, HaircutSalonDbContext context, IConfiguration configuration, IEmailSendService emailSendService)
+        public UsersServices(IUsersServiceRepository repository, HaircutSalonDbContext context, IConfiguration configuration, IEmailSendService emailSendService, ICloudinaryService cloudinaryService)
         {
             _repository = repository;
             _context = context;
             _configuration = configuration;
             _emailSendService = emailSendService;
+            _cloudinaryService = cloudinaryService;
         }
 
         public async Task<List<Users>> GetAllUsers()
@@ -139,6 +141,20 @@ namespace AppointmentAPI.Services
 
             return result;
 
+        }
+
+        public async Task UpdateAvatarAsync(int userId, IFormFile file, string fileName)
+        {
+            var user = this._repository.GetUserByID(userId);
+
+            if (file != null)
+            {
+                var imageUrl = await this._cloudinaryService.UploadPhotoAsync(file, fileName);
+
+                user.Picture = imageUrl;
+            }
+
+            this._repository.UpdateUsers(userId, user);
         }
     }
 

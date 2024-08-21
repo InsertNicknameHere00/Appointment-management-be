@@ -43,6 +43,11 @@
         [ForeignKey("RoleID")]
         public virtual Role Role { get; set; }
 
+        public string? Picture { get; set; }
+
+        //[NotMapped]
+        //public IFormFile? NewImage { get; set; }
+
         [JsonIgnore]
         public ICollection<Appointment> Appointments { get; set; } 
     }

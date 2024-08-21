@@ -17,5 +17,7 @@ namespace AppointmentAPI.Services
         Task<bool> ConfirmEmail(Users user, string token);
         Task<Users> AuthenticateUser(LoginUsers login);
         string GenerateJSONWebToken(Users user);
+
+        Task UpdateAvatarAsync(int userId, IFormFile file, string fileName);
     }
 }
