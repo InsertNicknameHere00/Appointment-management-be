@@ -79,15 +79,18 @@ namespace AppointmentAPI.Services
 
             public async Task<bool> ChangePassword(Users users) {
                 var userTemp=await _repository.GetUserByEmail(users.Email);
-                if (userTemp != null)
+            if (userTemp != null)
+            {
+                var token = await GenerateResetToken(users);
+                if (token != null)
                 {
-                    var token = GenerateResetToken(users);
                     _emailRequest.ToEmail = users.Email;
                     _emailRequest.Subject = "Forgotten Password";
                     _emailRequest.Body = _configuration.GetSection("urls").Value + "/api/Users/ForgottenPassword?Email=" + users.Email + "&token=" + token;
                     await _emailSendService.SendEmail(_emailRequest);
                     return true;
                 }
+            }
                 return false;
             }
 

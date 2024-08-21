@@ -87,8 +87,8 @@ namespace AppointmentAPI.Controllers
             return Ok(userTemp);
         }
 
-        [HttpPost("ForgottenPassword")]
-        public async Task<IActionResult> ForgottenPassword([FromQuery] string email, [FromQuery] string token, [FromBody] Users users)
+        [HttpGet("ForgottenPassword")]
+        public async Task<IActionResult> ForgottenPassword([FromQuery] string email, [FromQuery] string token)
         {
             var user = await _usersService.GetUserByEmail(email);
             if (user == null || token == null)
@@ -97,7 +97,7 @@ namespace AppointmentAPI.Controllers
             }
             else
             {
-                var userTemp = await _usersService.ForgottenPassword(users);
+                var userTemp = await _usersService.ForgottenPassword(user);
                 return Ok(userTemp);
             }
         }

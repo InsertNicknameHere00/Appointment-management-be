@@ -101,11 +101,12 @@ namespace AppointmentAPI.Repository
         }
 
         public async Task<bool> ForgottenPassword(Users users) {
-            var existingUser = await _context.Users.FindAsync(users.Email);
+            var existingUser = await GetUserByEmail(users.Email);
             var tokenTemp= ResetTokenCheck(users.ResetToken, users);
             if (existingUser != null && tokenTemp.Result==true)
             {
-                users.PasswordHash = users.PasswordHash;
+                Random random=new Random();
+                users.PasswordHash = random.Next(11).ToString();
                 _context.Users.Update(users);
                 await _context.SaveChangesAsync();
                 return true;
@@ -214,7 +215,7 @@ namespace AppointmentAPI.Repository
 
         public async Task<string> GenerateResetToken(Users users)
         {
-            var existingUser = await _context.Users.FindAsync(users.UserID);
+            var existingUser = await GetUserByEmail(users.Email);
             if (existingUser != null)
             {
                 Random random = new Random();
