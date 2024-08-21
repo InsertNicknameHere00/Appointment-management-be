@@ -77,24 +77,24 @@ namespace AppointmentAPI.Services
             return usersTemp;
         }
 
-        public async Task<bool> ChangePassword(Users users) {
-            var userTemp=await _repository.GetUserByEmail(users.Email);
-            if (userTemp != null)
-            {
-                var token = GenerateResetToken(users);
-                _emailRequest.ToEmail = users.Email;
-                _emailRequest.Subject = "Email Verification";
-                _emailRequest.Body = _configuration.GetSection("urls").Value + "/api/Users/ForgottenPassword?Email=" + users.Email + "&token=" + token;
-                await _emailSendService.SendEmail(_emailRequest);
-                return true;
+            public async Task<bool> ChangePassword(Users users) {
+                var userTemp=await _repository.GetUserByEmail(users.Email);
+                if (userTemp != null)
+                {
+                    var token = GenerateResetToken(users);
+                    _emailRequest.ToEmail = users.Email;
+                    _emailRequest.Subject = "Forgotten Password";
+                    _emailRequest.Body = _configuration.GetSection("urls").Value + "/api/Users/ForgottenPassword?Email=" + users.Email + "&token=" + token;
+                    await _emailSendService.SendEmail(_emailRequest);
+                    return true;
+                }
+                return false;
             }
-            return false;
-        }
 
         public async Task<bool> RegisterUsers(Users users) {
             bool usersTemp= await _repository.RegisterUsers(users);
 
-            var token = GenerateVerificationToken(users);
+            var token = users.VerificationToken;
          
             _emailRequest.ToEmail = users.Email;
             _emailRequest.Subject = "Email Verification";
@@ -113,12 +113,6 @@ namespace AppointmentAPI.Services
 
         public async Task<string> GenerateResetToken(Users users) {
             var tempToken = await _repository.GenerateResetToken(users);
-            return tempToken;
-        }
-
-        public async Task<bool> GenerateVerificationToken(Users users)
-        {
-            var tempToken = await _repository.GenerateVerificationToken(users);
             return tempToken;
         }
 

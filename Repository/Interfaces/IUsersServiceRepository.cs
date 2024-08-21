@@ -13,7 +13,6 @@ namespace AppointmentAPI.Repository
         Task<bool> ForgottenPassword(Users users);
         Task<Users> GetUserByEmail(string email);
         Task<string> GenerateResetToken(Users users);
-        Task<bool> GenerateVerificationToken(Users users);
         Task<bool> DeleteUsers(int id);
         Task<bool> ResetTokenCheck(string token, Users users);
 

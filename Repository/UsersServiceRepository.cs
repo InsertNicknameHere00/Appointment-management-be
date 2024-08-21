@@ -4,6 +4,7 @@ using AppointmentAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System;
 
 namespace AppointmentAPI.Repository
 {
@@ -150,13 +151,17 @@ namespace AppointmentAPI.Repository
 
             if (RegisteredUserExists(users).Result==true)
             {
+                Random random = new Random();
+
                 Users account = new Users();
                 account.FirstName = users.FirstName;
                 account.LastName = users.LastName;
                 account.PasswordHash = users.PasswordHash;
                 account.Email = users.Email;
                 account.PhoneNumber = users.PhoneNumber;
-                //Temporary leaving RoleID hardcoded to 1, cause we lack RoleID 2 in table
+                account.StartDate = DateTime.UtcNow;
+                account.EndDate = DateTime.UtcNow.AddHours(24);
+                account.ResetToken = random.Next(6).ToString();
                 account.RoleID = 2;
                 account.VerificationStatus = "Pending ...";
                 _context.Users.Add(account);
@@ -172,21 +177,6 @@ namespace AppointmentAPI.Repository
             {
                 users.VerificationStatus = "Verified";
                 _context.Users.Update(users);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<bool> GenerateVerificationToken(Users users)
-        {
-            var existingUser = await _context.Users.FindAsync(users.Email);
-            if (existingUser != null)
-            {
-                existingUser.StartDate = DateTime.UtcNow;
-                existingUser.EndDate = DateTime.UtcNow.AddHours(24);
-             existingUser.VerificationToken= Guid.NewGuid().ToString();
-                _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -227,9 +217,10 @@ namespace AppointmentAPI.Repository
             var existingUser = await _context.Users.FindAsync(users.UserID);
             if (existingUser != null)
             {
+                Random random = new Random();
                 existingUser.StartDate = DateTime.UtcNow;
                 existingUser.EndDate = DateTime.UtcNow.AddHours(24);
-                existingUser.ResetToken = Guid.NewGuid().ToString();
+                existingUser.ResetToken = random.Next(6).ToString();
                 _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
                 return existingUser.ResetToken.ToString();
