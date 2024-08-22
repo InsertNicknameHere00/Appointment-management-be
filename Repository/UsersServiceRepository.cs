@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System;
+using System.Text;
 
 namespace AppointmentAPI.Repository
 {
@@ -150,11 +151,9 @@ namespace AppointmentAPI.Repository
         }
         public async Task<string> RegisterUsers(Users users)
         {
-
-            if (RegisteredUserExists(users).Result==true)
+           // Random random = new Random();
+            if (RegisteredUserExists(users).Result == true)
             {
-                Random random = new Random();
-
                 Users account = new Users();
                 account.FirstName = users.FirstName;
                 account.LastName = users.LastName;
@@ -163,12 +162,25 @@ namespace AppointmentAPI.Repository
                 account.PhoneNumber = users.PhoneNumber;
                 account.StartDate = DateTime.UtcNow;
                 account.EndDate = DateTime.UtcNow.AddHours(24);
-                account.VerificationToken = random.Next(6).ToString();
+                account.VerificationToken = GenerateSecurityToken(128);
                 account.RoleID = 2;
                 account.VerificationStatus = "Pending ...";
                 _context.Users.Add(account);
                 await _context.SaveChangesAsync();
                 return account.VerificationToken;
+            }
+            else 
+            {
+                var existingUser = await GetUserByEmail(users.Email);
+                if (existingUser.EndDate < DateTime.UtcNow)
+                {
+                    existingUser.StartDate = DateTime.UtcNow;
+                    existingUser.EndDate = DateTime.UtcNow.AddHours(24);
+                    existingUser.VerificationToken = GenerateSecurityToken(128);
+                    _context.Users.Update(existingUser);
+                    await _context.SaveChangesAsync();
+                    return existingUser.VerificationToken;
+                }
             }
             return "Not found";
         }
@@ -216,14 +228,29 @@ namespace AppointmentAPI.Repository
             var existingUser = await GetUserByEmail(users.Email);
             if (existingUser != null)
             {
-                Random random = new Random();
                 existingUser.StartDate = DateTime.UtcNow;
                 existingUser.EndDate = DateTime.UtcNow.AddHours(24);
-                existingUser.ResetToken = random.Next(6).ToString();
+                existingUser.ResetToken = GenerateSecurityToken(128);
                 return existingUser.ResetToken.ToString();
             }
             return "Not found";
         }
+
+        private string GenerateSecurityToken(int length)
+        {
+            const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder result = new StringBuilder(length);
+            Random random = new Random();
+
+            for (int i = 0; i < length; i++)
+            {
+                // Select a random character from the validChars string
+                result.Append(validChars[random.Next(validChars.Length)]);
+            }
+
+            return result.ToString();
+        }
+
     }
 
 }
