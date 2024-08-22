@@ -20,6 +20,6 @@ namespace AppointmentAPI.Repository
 
         Task<string> RegisterUsers(Users users);
         Task<bool> ConfirmUserEmail(Users users, string token);
-        string GenerateSecurityToken(int length);
+        Task<string> GenerateSecurityToken(int length);
     }
 }

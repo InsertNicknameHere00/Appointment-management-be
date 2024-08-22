@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace AppointmentAPI.Repository
@@ -162,7 +163,7 @@ namespace AppointmentAPI.Repository
                 account.PhoneNumber = users.PhoneNumber;
                 account.StartDate = DateTime.UtcNow;
                 account.EndDate = DateTime.UtcNow.AddHours(24);
-                account.VerificationToken = GenerateSecurityToken(128);
+                account.VerificationToken = await GenerateSecurityToken(128);
                 account.RoleID = 2;
                 account.VerificationStatus = "Pending ...";
                 _context.Users.Add(account);
@@ -176,7 +177,7 @@ namespace AppointmentAPI.Repository
                 {
                     existingUser.StartDate = DateTime.UtcNow;
                     existingUser.EndDate = DateTime.UtcNow.AddHours(24);
-                    existingUser.VerificationToken = GenerateSecurityToken(128);
+                    existingUser.VerificationToken = await GenerateSecurityToken(128);
                     _context.Users.Update(existingUser);
                     await _context.SaveChangesAsync();
                     return existingUser.VerificationToken;
@@ -230,13 +231,13 @@ namespace AppointmentAPI.Repository
             {
                 existingUser.StartDate = DateTime.UtcNow;
                 existingUser.EndDate = DateTime.UtcNow.AddHours(24);
-                existingUser.ResetToken = GenerateSecurityToken(128);
+                existingUser.ResetToken = await GenerateSecurityToken(128);
                 return existingUser.ResetToken.ToString();
             }
             return "Not found";
         }
 
-        private string GenerateSecurityToken(int length)
+        public async Task<string> GenerateSecurityToken(int length)
         {
             const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
             StringBuilder result = new StringBuilder(length);
@@ -250,7 +251,6 @@ namespace AppointmentAPI.Repository
 
             return result.ToString();
         }
-
     }
 
 }
